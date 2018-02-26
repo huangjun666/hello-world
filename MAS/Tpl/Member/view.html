@@ -1,0 +1,242 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 会员中心 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<include file='Common:tongji' />
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>会员中心</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:850px;">
+    <h3>会员信息</h3>
+    <div class="idTabs">
+      <div class="items">
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+           <th width="131" align='right'>名称</th>
+           <th >内容</th>
+         </tr>
+                  <tr>
+          <td align="right">会员账号</td>
+          <td>
+                      {$member.user}
+                                </td>
+         </tr>
+          <tr>
+          <td align="right">店铺名称</td>
+          <td>
+                      {$member.shop}
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">团队标签</td>
+          <td>
+                      {$member.team_tag}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">姓名</td>
+          <td>
+                      {$member.name}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">性别</td>
+          <td>
+                      <if condition=' $member["sex"] eq 1 ' >
+                        男
+                        <else />
+                        女
+                      </if>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">身份证号</td>
+          <td>
+                      {$member.id_card}
+                                </td>
+         </tr>
+
+                  <tr>
+          <td align="right">身份证地址</td>
+          <td>
+            {$member.province}{$member.city}{$member.district}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">身份证详细地址</td>
+          <td>
+                      {$member.adress}
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">移动电话</td>
+          <td>
+                      {$member.tel}
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">固定电话</td>
+          <td>
+                      {$member.fixed_tel}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">开户银行</td>
+          <td>
+                      {$member.bank_name}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">开户名</td>
+          <td>
+                      {$member.bank_user}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">银行账号</td>
+          <td>
+                      {$member.bank_card}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">电子邮箱</td>
+          <td>
+                      {$member.email}
+                                 </td>
+         </tr>
+         <tr>
+          <td align="right">点位信息</td>
+          <td>        
+                      {$member.point}万
+                                 </td>
+         </tr>
+         <tr>
+          <td align="right">星级</td>
+          <td>        <if condition="$member['team_star'] neq 0">
+                        <php>echo SERVICE('Finance')->team_star_str($member['team_star']);</php>星董事
+                      <else/>
+                        无星
+                      </if>    
+                      
+                                 </td>
+         </tr>
+         <tr>
+          <td align="right">所属生活馆主</td>
+          <td>        
+                      {$sh_member.handle_name}
+                                 </td>
+         </tr>
+         <tr>
+          <td align="right">所属生活馆区域</td>
+          <td>        
+                      {$sh_member.sh_province}{$sh_member.sh_city}{$sh_member.sh_district}{$sh_member.sh_adress}
+                                 </td>
+         </tr>
+         <tr>
+          <td align="right">生活馆房租到期时间</td>
+          <td>        
+                      {$sh_member.sh_room_endtime|strtotime|date='Y-m-d',###}
+                                 </td>
+         </tr>
+         <tr>
+          <td align="right">生活馆房租状态</td>
+          <td>    
+          <php>
+            $sh_room_endtime=intval(strtotime($sh_member['sh_room_endtime']));//房租到期时间时间戳
+            $current_time=time();//当前时间戳
+
+            //1、正常状态，到期时间大于1个月60*60*24*30
+            if( ($sh_room_endtime-$current_time) >= 60*60*24*30 ){
+              $sh_status=1;
+            }
+
+            //2、即将到期，到期时间小于1个月60*60*24*30，大于当前时间
+            if( ($sh_room_endtime-$current_time) < 60*60*24*30 && $sh_room_endtime >= $current_time ){
+              $sh_status=2;
+            }
+
+            //3、过期，到期时间小于当前时间
+            if( $sh_room_endtime < $current_time ){
+              $sh_status=3;
+            }
+          </php>    
+          <switch name="sh_status" >
+            <case value="1"><span style='color:#28B779;'>正常</span></case>
+            <case value="2"><span style='color:#f00;'>即将过期</span></case>
+            <case value="3"><span style='color:#0065B0;'>过期</span></case>
+            </switch>
+                                 </td>
+         </tr>
+         <tr class='red' >
+          <td align="right">将来月业绩</td>
+          <td>
+                      {$member.future_month_ach}
+                                 </td>
+         </tr>
+         <tr class='red' >
+          <td align="right">将来周业绩</td>
+          <td>
+                      {$member.future_week_ach}
+                                 </td>
+         </tr>
+         <tr class='red' >
+          <td align="right">月业绩</td>
+          <td>
+                      {$member.month_ach}
+                                 </td>
+         </tr>
+         <tr class='red' >
+          <td align="right">周业绩</td>
+          <td>
+                      {$member.week_ach}
+                                 </td>
+         </tr>
+         <if condition=" in_array($_SESSION['user'], array('LSMT')) " >
+         <tr class='red' >
+          <td align="right">将来总业绩</td>
+          <td>
+                      {$member.future_total_ach}
+                                 </td>
+         </tr>
+         
+         <tr class='red' >
+          <td align="right">总业绩</td>
+          <td>
+                      {$member.total_ach}
+                                 </td>
+         </tr>
+         
+         </if>
+                  
+
+                 </table>
+        </div>
+        
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+          <td width="131"></td>
+          <td>
+           <input type="hidden" name="token" value="24760807" />
+           <input class="btn" type="button" value="返回" onclick='history.back();' />
+          </td>
+         </tr>
+        </table>
+      </div>
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 会员中心 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__/js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+</style>
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 会员中心<b>></b><strong>会员列表</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3 class='m'>
+          <if condition=" in_array($_SESSION['role'], array(4)) " >
+          <a href="{:U('Member/add')}" class="actionBtn add">添加会员</a>
+          <a href="{:U('Member/download')}" class="actionBtn red m">下载会员信息</a>
+          </if>
+          会员列表
+        </h3>
+        <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+          <form class="finance_select" id='finance_select' method='post' action='__SELF__'>
+            <div class="member">
+              <span>搜索关键词：</span>
+              <input type="text" value='{$Think.post.user}' name='user' placeholder='请输入会员账号或姓名'>
+            </div>
+            <div class="search" onclick='$("#finance_select").submit();'>查询</div>
+          </form>
+          </if>
+        <div id="list">
+    <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+      <tr>
+        <th width="30" align="center">序号</th>
+        <th align="left">会员账号</th>
+        <th width="60" align="center">姓名</th>
+        <th width="60" align="center">性别</th>
+        <th width="80" align="center">开户行</th>
+        <th width="150" align="center">银行账号</th>
+        <th width="60" align="center">移动电话</th>
+        <th width="160" align="center">邮箱</th>
+       <th width="80" align="center">添加日期</th>
+        <th width="60" align="center">操作</th>
+      </tr>
+      <foreach name="member" item="v">
+      <tr>
+        <td align="center"><php> echo $sort+$key+1; </php></td>
+        <td><a class='red under' href="{:U('Member/view',array('member_id'=>$v['member_id']))}">{$v.user}</a></td>
+        <td align="center">{$v.name}</td>
+        <td align="center">
+        <if condition="$v['sex'] eq 1 "> 
+          男
+        <elseif condition="$v['sex'] eq 2 "/>
+         女
+        </if>
+        </td>
+        <td align="center">{$v.bank_name}</td>
+        <td align="center">{$v.bank_card}</a></td>
+        <td align="center">{$v.tel}</td>
+        <td align="center">{$v.email}</td>
+        <td align="center">{$v.add_time|strtotime|date='Y-m-d',###}</td>
+        <td align="center"><a href="{:U('Member/edit',array('member_id'=>$v['member_id']))}">编辑</a> | 
+        <if condition=' $v["status"] eq 1 ' >
+          <a href="{:U('Member/stop',array('member_id'=>$v['member_id']))}">冻结</a>
+          <else />
+          <a href="{:U('Member/start',array('member_id'=>$v['member_id']))}">激活</a>
+        </if>
+      </td>
+      </tr>
+      </foreach>
+
+          </table>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager">{$page}</div>               </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

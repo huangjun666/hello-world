@@ -1,0 +1,136 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 订货管理 </title>
+<link href="__PUBLIC__css/public.css" rel="stylesheet" type="text/css">
+<link href="__PUBLIC__fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/laydate.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__fancybox/jquery.fancybox.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+  .actionBtn{ margin: 0 20px 0 0;display: inline;}
+</style>
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<php> if( $_SESSION['menu']=='Finance' ): </php>
+<include file='Common:menu' />
+<php> elseif($_SESSION['menu']=='Depot'): </php>
+<include file='Common:depot_menu' />
+<php> endif; </php>
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>订货管理</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3 class='m'>订货管理<br></h3>
+        <if condition=" in_array($_SESSION['role'], array(2,3,4,5)) " >
+          <form class="finance_select" id='finance_select' method='get' action='__SELF__'>
+            <div class="type">
+              <span>分类：</span>
+              <select name="status">
+                <option value=0 <if condition=' $_GET["status"] eq 0 ' > selected="true"</if> >全部</option>
+                <option value=1 <if condition=' $_GET["status"] eq 1 ' > selected="true"</if> >待提交</option>
+                <option value=2 <if condition=' $_GET["status"] eq 2 ' > selected="true"</if> >待发货</option>
+                <option value=3 <if condition=' $_GET["status"] eq 3 ' > selected="true"</if> >发货中</option>
+                <option value=4 <if condition=' $_GET["status"] eq 4 ' > selected="true"</if> >待补发</option>
+                <option value=7 <if condition=' $_GET["status"] eq 7 ' > selected="true"</if> >完结</option>
+              </select>
+            </div>
+            <div class="member">
+              <span>姓名：</span>
+              <input type="text" value='{$Think.get.name}' name='name' placeholder='请输入姓名查询'>
+              <input type="hidden" name='p' value='1'>
+            </div>
+            <div class="search" onclick='$("#finance_select").submit();'>查询</div>
+          </form>
+          </if>
+        <div id="list">
+    <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+      <tr>       
+        <th width="30" align="center">序号</th>
+        <th width="135" align="left">姓名</th>
+        <th width="100" align="left">联系方式</th>
+        <th width="60" align="left">收货人姓名</th>
+        <th width="100" align="left">收货人联系方式</th>
+        <th align="left">收货地址</th>
+        <th width="50" align="left">报单金额</th>
+        <th width="120" align="left">日期</th>
+        <th width="120" align="left">更新日期</th>
+        <th width="40" align="left">状态</th>
+        <th width="80" align="center">操作</th>
+      </tr>
+      <foreach name='orderGoods' item='v'>
+      <tr>
+        <td align="center"><php> echo $sort+$key+1; </php></td>
+        <td align="left">
+          <empty name="v.user" >
+          暂无
+          <else />
+           {$v.user}
+         </empty>
+          ({$v.name})
+        </td>
+        <td align="left">{$v.tel}</td>
+        <td align="left">{$v.goods_name}</td>
+        <td align="left">{$v.goods_tel}</td>
+        <td align="left">{$v.goods_address}</td>
+        <td align="left">{$v.money}</td>
+        <td align="left">{$v.add_time}</td>
+        <td align="left">{$v.update_time}</td>
+        <td align="left">
+            <switch name="v.status" >
+            <case value="1"><span style='color:#666;'>待提交</span></case>
+            <case value="2"><span style='color:#0065B0;'>待发货</span></case>
+            <case value="3"><span style='color:#0065B0;'>发货中</span></case>
+            <case value="4"><span style='color:#DEDA1A;'>待补发</span></case>
+            <case value="5"><span style='color:#DEDA1A;'>待补发</span></case>
+            <case value="6"><span style='color:#DEDA1A;'>待补发</span></case>
+            <case value="7"><span style='color:#28B779;'>完结</span></case>
+            </switch>
+        </td>
+        <td align="center"><a class='del' href="{:U('OrderGoods/view',array('order_id'=>$v['order_id']))}">查看</a>
+        <php>
+
+          //是否可以编辑
+          $isCan=false;
+
+          // 馆主编辑权限检查
+          if(in_array($v['status'], array(1)) && (in_array($_SESSION['role'], array(2)) || $_SESSION['id_card']==$v['id_card'] ) ){
+            $isCan=true;
+          }
+
+          // 财务、超级管理员
+          if(in_array($_SESSION['role'], array(3,4)) &&  !in_array($v['status'], array(7))){
+            $isCan=true;
+          }
+          // 仓库管理员
+          if(in_array($_SESSION['role'], array(5)) &&  !in_array($v['status'], array(1,7))){
+            $isCan=true;
+          }
+        </php>
+        <if condition='$isCan'>
+           | <a class='del' href="{:U('OrderGoods/edit',array('order_id'=>$v['order_id']))}">编辑</a>
+        </if>
+        </td>
+      </tr>
+      </foreach>
+          </table>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager">{$page}</div>
+    </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

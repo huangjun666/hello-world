@@ -1,0 +1,347 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 订单管理 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<link href="__PUBLIC__fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__fancybox/jquery.fancybox.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/myjs.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+</head>
+<script>
+//补单
+function supplement_order(order_id){
+
+  location.href='/Order/add/order_id/'+order_id+'/orderType/2';
+
+}
+
+//重销
+function repeat_order(order_id){
+  location.href='/Order/add/order_id/'+order_id+'/orderType/3';
+}
+
+
+</script>
+<body>
+<div class="body_bg"></div>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>订单管理</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+    <h3>
+      <a href="{:U('OrderGoods/edit',array('order_id'=>$order['order_id']))}" class="actionBtn blue m20" onclick='$(".body_bg").show()'>查看订货单</a>
+      <if condition=" in_array($_SESSION['role'], array(3,4)) and $order['status'] eq 4" >
+
+      <a href="javascript:void(0)" class="actionBtn red" onclick='audit_no({$order.order_id})'>一审不通过</a>
+      <a href="javascript:void(0)" style='margin:0 20px 0 0; display:inline;' class="actionBtn" onclick='audit_yes({$order.order_id})' >一审通过</a>
+      <a href="javascript:void(0)" style='margin:0 20px 0 0; display:inline;' class="actionBtn blue" onclick='web.backOrderDialog({$order.order_id})' >打回</a>
+      <script>
+        //一审通过
+        function audit_yes(order_id){
+          // 提醒用户
+          if(!confirm("一审通过之后，将不可逆转，\\n确认要【一审通过】吗？")){
+            return false;
+          }
+          $(".body_bg").show();
+          location.href='/Order/audit/order_id/'+order_id+'/audit/1';
+        }
+
+        //一审不通过
+        function audit_no(order_id){
+          // 提醒用户
+          if(!confirm("一审不通过之后，将不可逆转，\\n确认要【一审不通过】吗？")){
+            return false;
+          }
+          $(".body_bg").show();
+          location.href='/Order/audit/order_id/'+order_id+'/audit/2';
+        }
+      </script>
+      </if>
+      <if condition=" in_array($_SESSION['role'], array(3,4)) and $order['status'] eq 5" >
+      <a href="javascript:void(0)" class="actionBtn red" onclick='secondAudit_no({$order.order_id})'>二审不通过</a>
+      <a href="javascript:void(0)" style='margin:0 20px 0 0; display:inline;' class="actionBtn" onclick='secondAudit_yes({$order.order_id})' >二审通过</a>
+      <script>
+        //二审通过
+        function secondAudit_yes(order_id){
+          // 提醒用户
+          if(!confirm("二审通过之后，将不可逆转，\\n确认要【二审通过】吗？")){
+            return false;
+          }
+          $(".body_bg").show();
+          location.href='/Order/secondAudit/order_id/'+order_id+'/audit/1';
+        }
+
+        //二审不通过
+        function secondAudit_no(order_id){
+          // 提醒用户
+          if(!confirm("二审不通过之后，将不可逆转，\\n确认要【二审不通过】吗？")){
+            return false;
+          }
+          $(".body_bg").show();
+          location.href='/Order/secondAudit/order_id/'+order_id+'/audit/2';
+        }
+      </script>
+      </if>
+      <if condition=" in_array($_SESSION['role'], array(3,4)) and $order['status'] eq 6" >
+      <a href="javascript:void(0)" class="actionBtn red" onclick='thirdAudit_no({$order.order_id})'>三审不通过</a>
+      <a href="javascript:void(0)" style='margin:0 20px 0 0; display:inline;' class="actionBtn" onclick='thirdAudit_yes({$order.order_id})' >三审通过</a>
+      <script>
+        //三审通过
+        function thirdAudit_yes(order_id){
+          // 提醒用户
+          if(!confirm("三审通过之后，将不可逆转，\\n确认要【三审通过】吗？")){
+            return false;
+          }
+          $(".body_bg").show();
+          location.href='/Order/thirdAudit/order_id/'+order_id+'/audit/1';
+        }
+
+        //三审不通过
+        function thirdAudit_no(order_id){
+          // 提醒用户
+          if(!confirm("三审不通过之后，将不可逆转，\\n确认要【三审不通过】吗？")){
+            return false;
+          }
+          $(".body_bg").show();
+          location.href='/Order/thirdAudit/order_id/'+order_id+'/audit/2';
+        }
+      </script>
+      </if>
+      订单信息</h3>
+    <div class="idTabs">
+      <div class="items">
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+           <th width="131" align='right'>名称</th>
+           <th >内容</th>
+         </tr>
+         <if condition=" $order['status'] eq 1 && !empty($order['back_msg'])" >
+          <tr>
+          <td align="right"><span class='red'>订单打回理由</span></td>
+          <td>
+                     <span class='red'>{$order.back_msg}</span>
+                                </td>
+         </tr>
+        </if>
+                  <tr>
+          <td align="right">店铺名称</td>
+          <td>
+                      {$order.recommend_shop}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">姓名</td>
+          <td>
+                      {$order.name}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">联系方式</td>
+          <td>
+                      {$order.tel}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">身份证号</td>
+          <td>
+                      {$order.id_card}
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">身份证（所属区域）</td>
+          <td>
+                      
+                       {$order.province}{$order.city}{$order.district}
+                                </td>
+         </tr>
+                                    <tr>
+          <td align="right">身份证详细地址</td>
+          <td>
+                      {$order.adress}                         </td>
+         </tr>
+
+                  <tr>
+          <td align="right">开户行</td>
+          <td>
+                      {$order.bank_name}
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">开户名</td>
+          <td>
+                      {$order.bank_user}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">银行账号</td>
+          <td>
+                      {$order.bank_card}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">推荐人</td>
+          <td>
+                      {$order.recommend_user}({$order.recommend_name})
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">安置人</td>
+          <td>
+                      {$order.place_user}({$order.place_name})
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">报单日期</td>
+          <td>
+                      {$order.add_time}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">报单金额</td>
+          <td>
+                      {$order.money}
+                                 </td>
+         </tr>
+                  <tr>
+          <td align="right">报单类型</td>
+          <td>
+                      
+                       <switch name="order.type" >
+                      <case value="1">普通经销商</case>
+                      <case value="2">生活馆</case>
+                      </switch>
+                      (
+                        <switch name="order.orderType" >
+                        <case value="1">首单</case>
+                        <case value="2">补单</case>
+                        <case value="3">重销</case>
+                        </switch>
+                      )
+                                </td>
+         </tr>
+
+                  
+         <tr>
+          <td align="right">邮箱</td>
+          <td>
+                      {$order.email}                         </td>
+         </tr>
+         <tr>
+          <td align="right">订单备注</td>
+          <td>
+                      {$order.remarks}                           </td>
+         </tr>
+         <tr>
+          <td align="right">合同照片</td>
+          <td>
+                      <div class="shop_goods_cover bg">
+                        
+                        <div class="img" id="shop_goods_cover">
+                          <if condition=" isset($order[\'contract_img1\']) ">
+                            <img src="{$order.contract_img1}" alt="">
+                          </if>
+                        </div>
+                        <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+                        <div class="but download">
+                          <a href="{:U('Order/contractDownload',array('order_id'=>$order['order_id'],'contract_type'=>1))}">下载合同</a>
+                        </div>
+                        </if>
+                        
+                      </div>
+                      <div class="shop_goods_cover bg">
+                        
+                        <div class="img" id="shop_goods_cover">
+                          <if condition=" isset($order[\'contract_img2\']) ">
+                            <img src="{$order.contract_img2}" alt="">
+                          </if>
+                        </div>
+                        <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+                        <div class="but download">
+                          <a href="{:U('Order/contractDownload',array('order_id'=>$order['order_id'],'contract_type'=>2))}">下载合同</a>
+                        </div>
+                        </if>
+                        
+                      </div>
+
+                      <div class="shop_goods_cover bg">
+                        
+                        <div class="img" id="shop_goods_cover">
+                          <if condition=" isset($order[\'contract_img3\']) ">
+                            <img src="{$order.contract_img3}" alt="">
+                          </if>
+                        </div>
+                        <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+                        <div class="but download">
+                          <a href="{:U('Order/contractDownload',array('order_id'=>$order['order_id'],'contract_type'=>3))}">下载合同</a>
+                        </div>
+                        </if>
+                        
+                      </div>
+                      <div class="shop_goods_cover bg">
+                        
+                        <div class="img" id="shop_goods_cover">
+                          <if condition=" isset($order[\'contract_img4\']) ">
+                            <img src="{$order.contract_img4}" alt="">
+                          </if>
+                        </div>
+                        <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+                        <div class="but download">
+                          <a href="{:U('Order/contractDownload',array('order_id'=>$order['order_id'],'contract_type'=>4))}">下载合同</a>
+                        </div>
+                        </if>
+                        
+                      </div>
+                                                </td>
+         </tr>
+                  <tr>
+          <td align="right">审核状态</td>
+          <td>
+                      <switch name="order.status" >
+                    <case value="1"><span style='color:#666;'>待提交</span></case>
+                    <case value="2"><span style='color:#28B779;'>通过</span></case>
+                    <case value="3"><span style='color:#f00;'>不通过</span></case>
+                    <case value="4"><span style='color:#0065B0;'>待一审</span></case>
+                    <case value="5"><span style='color:#0065B0;'>待二审</span></case>
+                    <case value="6"><span style='color:#0065B0;'>待三审</span></case>
+                    </switch>
+                                 </td>
+         </tr>
+         <tr>
+          <td align="right">所属馆主：</td>
+          <td>
+                      {$order.handle}                         </td>
+         </tr>
+
+                 </table>
+        </div>
+        
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+          <td width="131"></td>
+          <td>
+           <input class="btn" type="button" value="返回" onclick='history.back();' />
+           <if condition=" in_array($_SESSION['role'], array(2,4)) " >
+           <input class="btn bg1 m10" type="button" value="补单" onclick='supplement_order({$order.order_id});' />
+           <input class="btn bg1 m10" type="button" value="重销" onclick='repeat_order({$order.order_id});' />
+           </if>
+          </td>
+         </tr>
+        </table>
+      </div>
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

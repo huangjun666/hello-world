@@ -1,0 +1,35 @@
+
+ <div id="dcHead" <if condition=" MODULE_NAME eq 'Shop' or MODULE_NAME eq 'ShopDepot' or MODULE_NAME eq 'ShopCart'" > class='bg' </if> >
+ <div id="head" <if condition=" MODULE_NAME eq 'Shop' or MODULE_NAME eq 'ShopDepot' or MODULE_NAME eq 'ShopCart'" > class='bg' </if>>
+  <div class="logo <if condition=" MODULE_NAME eq 'Shop' or MODULE_NAME eq 'ShopDepot' or MODULE_NAME eq 'ShopCart'" > bg </if>">
+    <a href="#">
+      <if condition=" MODULE_NAME eq 'Shop' or MODULE_NAME eq 'ShopDepot' or MODULE_NAME eq 'ShopCart'" >
+      <img height="90%" src="__PUBLIC__/images/logo1.png" alt="logo">
+      <else/> 
+      <img height="85%" src="__PUBLIC__/images/logo.png" alt="logo">
+      </if>
+    </a>
+  </div>
+  <div class="nav">
+   <ul>
+   </ul>
+   <ul class="navRight">
+    <li class="M noLeft  <if condition=" MODULE_NAME eq 'Shop' or MODULE_NAME eq 'ShopDepot' or MODULE_NAME eq 'ShopCart'" > bg </if> " id='admin'><a href="JavaScript:void(0);">
+      您好，{$Think.session.user}
+      （<switch name="Think.session.role" >
+      <case value="1">普通经销商</case>
+      <case value="2">生活馆馆主</case>
+      <case value="3">财务</case>
+      <case value="4">系统管理员</case>
+      <case value="5">仓库管理员</case>
+      </switch>）
+    </a>
+     <!-- <div class="drop mUser">
+      <a href="#">密码修改</a>
+     </div> -->
+    </li>
+    <li class="noRight <if condition=" MODULE_NAME eq 'Shop' or MODULE_NAME eq 'ShopDepot' or MODULE_NAME eq 'ShopCart'" > bg </if> "><a href="{:U('Login/loginout')}">退出</a></li>
+   </ul>
+  </div>
+ </div>
+</div>

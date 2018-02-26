@@ -1,0 +1,175 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 订货单 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/myjs.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+</head>
+<style>
+#main table{ border-left: #ccc solid 1px; border-top: #ccc solid 1px;}
+#main th{ border-right: #ccc solid 1px; border-bottom: #ccc solid 1px;}
+#main td{ border-right: #ccc solid 1px; border-bottom: #ccc solid 1px;}
+#main tr.white td{ background: #f9f9f9;}
+
+</style>
+<script>
+  $(function(){
+    web.autoComputeGoodsTotal();//自动计算货品总数和总价
+  })
+</script>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<php> if( $_SESSION['menu']=='Finance' ): </php>
+<include file='Common:menu' />
+<php> elseif($_SESSION['menu']=='Depot'): </php>
+<include file='Common:depot_menu' />
+<php> endif; </php>
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>发货单</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+    <h3>填写发货单</h3>
+    <div class="idTabs">
+      <div class="items">
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic" style="max-width:900px; color:#333; float:left; background:#fff;">
+         <tr>
+           <th colspan=9 style="font-size:18px; background:#0A8E55; color:#fff;">浪莎发货单</th>
+         </tr>
+         <tr>
+          <td colspan=3><b>会员账号：</b>
+          <empty name="memberInfo" >
+          暂无
+          <else />
+           {$memberInfo.user}({$memberInfo.name})
+         </empty>
+          </td>
+           <td colspan=2><b>姓名：</b>{$deliverGoods.name}</td>
+           <td colspan=2><b>联系方式：</b>{$deliverGoods.tel}</td>
+           <td colspan=2><b>日期：</b>{$deliverGoods.add_time}</td>
+         </tr>
+         <tr>
+           <td colspan=4><b>收货地址：</b>{$deliverGoods.deliver_address}</td>
+           <td colspan=2><b>物流公司：</b><php> echo SERVICE('DeliverGoods')->getCompanyName($deliverGoods['logistics_company']);</php></td>
+           <td colspan=3><b>运单号：</b>{$deliverGoods.waybill_number}</td>
+         </tr>
+         <tr>
+           <td colspan=4><b>代收货人姓名：</b>{$deliverGoods.deliver_name}</td>
+           <td colspan=5><b>代收货人联系方式：</b>{$deliverGoods.deliver_tel}</td>
+         </tr>
+        <tr class='white'>
+          <td><b>货号</b></td>
+          <td><b>货品</b></td>
+          <td><b>尺码</b></td>
+          <td><b>颜色</b></td>
+          <td><b>单价（元）</b></td>
+          <td><b>折扣</b></td>
+          <td><b>数量</b></td>
+          <td><b>单位</b></td>
+          <td><b>合计（元）</b></td>
+        </tr>
+        <empty name="deliverGoodsList">
+          <tr class='white'>
+            <td colspan=9 align='center'>暂无货品</td>
+          </tr>
+          <else />
+        <foreach name="deliverGoodsList" item="v">
+        <tr class='white'>
+          <td>{$v.number}</td>
+          <td>{$v.name}</td>
+          <td>{$v.size}</td>
+          <td>{$v.color}</td>
+          <td>{$v.price|floatval}</td>
+          <td class="goodsDiscount" id="goodsDiscount_{$v.goods_id}">{$v.discount}%</td>
+          <td class='orderGoodsNum' id="goodsNum_{$v.goods_id}">{$v.num}</td>
+          <td>{$v.num_unit}</td>
+          <td class='orderGoodsMoney' id="goodsMoney_{$v.goods_id}"><php> echo floatval($v['price']*$v['num']*$v['discount']*0.01) </php></td>
+        </tr>
+        </foreach>
+        </empty>
+        <tr class='white'>
+          <td><b>发货单状态：</b></td>
+          <td colspan=4><em class="red f18">
+            <switch name="deliverGoods.status" >
+            <case value="1"><span style='color:#666;'>待发货</span></case>
+            <case value="2"><span style='color:#0065B0;'>已发货</span></case>
+            <case value="3"><span style='color:#28B779;'>已收到</span></case>
+            <case value="4"><span style='color:#f00;'>未收到</span></case>
+            </switch>
+          </em></td>
+          <td><b>总件数:</b></td>
+          <td class="red f16" id="orderGoodsNum">3件</td>
+          <td><b>总计：</b></td>
+          <td colspan=1 class="red f16" id="orderGoodsMoney">4140元</td>
+        </tr>
+        <tr>
+          <td colspan=9><b>备注：</b>{$deliverGoods.remarks}</td>
+        </tr>
+        <!-- <tr>
+          <td><b>打印日期：</b></td>
+          <td colspan=2><php> echo date('Y-m-d H:i:s') </php></td>
+          <td colspan=5></td>
+        </tr> -->
+        </table>
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic" style="margin:0px 0 0 20px; width:112px; float:left; display:inline;">
+         <tr>
+          <td align="right">
+           <input class="btn bg3" style="width:95px;" type="button" onclick="web.goOrderGoods({$deliverGoods.order_id})" value="返回订货单" />
+          </td>
+         </tr>
+         <if condition=" ($_SESSION['user'] eq 'LSMT' || $deliverGoods['id_card'] eq $_SESSION['id_card']) && in_array($deliverGoods['status'], array(2)) ">
+         <tr>
+          <td align="right">
+           <input class="btn bg2" id="receipt" style="width:95px;" type="button" onclick="web.receipt({$deliverGoods.deliver_id})" value="确认收货" />
+          </td>
+         </tr>
+         </if>
+         <if condition=" ($_SESSION['user'] eq 'LSMT' || $deliverGoods['id_card'] eq $_SESSION['id_card']) && in_array($deliverGoods['status'], array(3)) ">
+         <tr>
+          <td align="right">
+           <input class="btn bg4"  style="width:95px;" disabled="disabled" type="button" value="已收货" />
+          </td>
+         </tr>
+         </if>
+         <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+         <tr>
+          <td align="right">
+           <input class="btn" style="width:95px;" type="button" onclick="web.downloadDeliver({$deliverGoods.deliver_id})" value="下载发货单" />
+          </td>
+         </tr>
+        </if>
+         <tr>
+          <td align="right">
+           <input class="btn" style="width:95px;" type="button" value="返回" onclick="location.href='/DeliverGoods/index'" />
+          </td>
+         </tr>    
+        </table>
+        <if condition=" in_array($deliverGoods['status'], array(2,3,4)) ">
+        <table id="logisticsInfo" width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic" style="margin:-1px 0 0 00px; width:899px; color:#000; float:left; display:inline;">
+         <tr>
+          <th width=898 colspan=2 align="left">
+            <a href="javascript:void(0)" onclick="web.showLogistics({$deliverGoods.deliver_id})" style="color:#0072C6; font-size:12px; text-decoration:underline;">查看物流</a>
+            <a target='blank' style="color:#0072C6; font-size:12px; text-decoration:underline; margin:0 0 0 15px;" href="https://www.baidu.com/s?wd={$deliverGoods.waybill_number}">查看物流2[备用]</a>
+          </th>
+         </tr>
+        </table>
+        </if>
+      </div>
+      
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>
+
+
+

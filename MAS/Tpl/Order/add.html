@@ -1,0 +1,326 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 订单管理 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/myjs.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/ajaxfileupload.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+</head>
+<script>
+  var provinceID='<if condition=" isset($_POST[\'province\']) ">{$Think.post.province}<else />{$order.ProvinceID}</if>';
+  var province='<if condition=" isset($_POST[\'province_name\']) ">{$Think.post.province_name}<else />{$order.province}</if>';
+  var cityID='<if condition=" isset($_POST[\'city\']) ">{$Think.post.city}<else />{$order.CityID}</if>';
+  var city='<if condition=" isset($_POST[\'city_name\']) ">{$Think.post.city_name}<else />{$order.city}</if>';
+  var districtID='<if condition=" isset($_POST[\'district\']) ">{$Think.post.district}<else />{$order.DistrictID}</if>';
+  var district='<if condition=" isset($_POST[\'province_name\']) ">{$Think.post.province_name}<else />{$order.district}</if>';
+
+  var order_provinceID='<if condition=" isset($_POST[\'order_province\']) ">{$Think.post.order_province}<else />{$order.order_ProvinceID}</if>';
+  var order_province='<if condition=" isset($_POST[\'order_province_name\']) ">{$Think.post.order_province_name}<else />{$order.order_province}</if>';
+  var order_cityID='<if condition=" isset($_POST[\'order_city\']) ">{$Think.post.order_city}<else />{$order.order_CityID}</if>';
+  var order_city='<if condition=" isset($_POST[\'order_city_name\']) ">{$Think.post.order_city_name}<else />{$order.order_city}</if>';
+  var order_districtID='<if condition=" isset($_POST[\'order_district\']) ">{$Think.post.order_district}<else />{$order.order_DistrictID}</if>';
+  var order_district='<if condition=" isset($_POST[\'order_province_name\']) ">{$Think.post.order_province_name}<else />{$order.order_district}</if>';
+
+  $(function(){
+    /**身份证**/
+    /*省级名加载*/
+    web.getProvince('#province');
+
+    /*市级加载*/
+    $('#province').change(function(){
+      var provinceID=$(this).val();
+      var selectIndex = document.getElementById("province").selectedIndex;
+        $('#province_name').val(document.getElementById("province").options[selectIndex].text);
+      web.getCity('#city',provinceID);
+      
+    })
+
+    /*区/县级加载*/
+    $('#city').change(function(){
+      var cityID=$(this).val();
+      web.getDistrict('#district',cityID);
+      
+    })
+
+
+    /**订单**/
+    /*省级名加载*/
+    web.getOrderProvince('#order_province');
+
+    /*市级加载*/
+    $('#order_province').change(function(){
+      var provinceID=$(this).val();
+      var selectIndex = document.getElementById("order_province").selectedIndex;
+        $('#order_province_name').val(document.getElementById("order_province").options[selectIndex].text);
+      web.getOrderCity('#order_city',provinceID);
+      
+    })
+
+    /*区/县级加载*/
+    $('#order_city').change(function(){
+      var cityID=$(this).val();
+      web.getOrderDistrict('#order_district',cityID);
+      
+    })
+
+    //强制数字
+    $('.num').blur(function(){
+        var val=$(this).val();
+        if( isNaN(val) ){
+          $(this).val(0);
+        }
+    });
+
+  })
+</script>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>订单管理</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+    <h3>添加订单</h3>
+    <p style='margin:-20px 0 10px 0; color:#078E31;' >首单原则：对于同一会员(<span class='red' >通过身份证识别</span>)，只会有一个推荐人，即首单推荐人，即使后面有其他推荐人录单</p>
+    <div class="idTabs">
+      <div class="items">
+       <form action="#" method="post" autocomplete=off >
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+           <th width="131" align='right'>名称</th>
+           <th >内容</th>
+         </tr>
+                  <tr>
+          <td align="right">店铺名称</td>
+          <td>
+                      <input type="text" name="recommend_shop" value='<if condition=" isset($_POST[\'recommend_shop\']) ">{$Think.post.recommend_shop}<else />{$order.recommend_shop}</if>' placeholder="如：浙江杭州上城区朝晖路旗舰店" size="80" class="inpMain" />
+                      <input type="hidden" name="orderType" value='<if condition=" isset($_POST[\'orderType\']) ">{$Think.post.orderType}<else />{$Think.get.orderType}</if>'>
+                      <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">姓名</td>
+          <td>
+                      <input type="text" name="name" value='<if condition=" isset($_POST[\'name\']) ">{$Think.post.name}<else />{$order.name}</if>' placeholder="输入姓名" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+          <tr>
+          <td align="right">性别</td>
+          <td>
+                      <label for="mobile_closed_0">
+           <input type="radio" name="sex" id="mobile_closed_0" value="1" checked="true">
+           男</label>
+          <label for="mobile_closed_1">
+           <input type="radio" name="sex" id="mobile_closed_1" value="2"  <if condition=' ($_POST["sex"] eq 2) or ($order["sex"] eq 2) ' > checked="true"</if>>
+           女</label>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">联系方式</td>
+          <td>
+                      <input type="text" name="tel" value='<if condition=" isset($_POST[\'tel\']) ">{$Think.post.tel}<else />{$order.tel}</if>' placeholder="输入联系方式" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">身份证号</td>
+          <td>
+                      <input type="text" name="id_card" value='<if condition=" isset($_POST[\'id_card\']) ">{$Think.post.id_card}<else />{$order.id_card}</if>' placeholder="输入身份证号" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                      <p class='cue' style='color:red;'>*请慎重，身份证一旦填写，不可更改</p>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">身份证（所属区域）</td>
+          <td>
+                      <select name="province" id='province' value=''>
+                       </select>
+                       <select name="city" id='city'>
+                       </select>
+                       <select name="district" id='district'>
+                      </select><span class='red'>{$error}</span>
+                      <input type="hidden" name="province_name" id="province_name">
+                      <input type="hidden" name="city_name" id="city_name">
+                      <input type="hidden" name="district_name" id="district_name">
+                       <p class="cue">请在下面地址栏，写上详细的具体地址。</p>
+                                </td>
+         </tr>
+                                    <tr>
+          <td align="right">身份证详细地址</td>
+          <td>
+                      <input type="text" name="adress" value='<if condition=" isset($_POST[\'adress\']) ">{$Think.post.adress}<else />{$order.adress}</if>' placeholder="请输入详细地址" size="80" class="inpMain" /><span class='red'>{$error}</span>                           </td>
+         </tr>
+
+                  <tr>
+          <td align="right">开户行</td>
+          <td>
+                      <select name="bank_name">
+                        <option <if condition=' $_POST["bank_name"] eq "中国银行" ' > selected="true"</if> >中国银行</option>
+                        <option <if condition=' $_POST["bank_name"] eq "中国工商银行" ' > selected="true"</if> >中国工商银行</option>
+                        <option <if condition=' $_POST["bank_name"] eq "中国农业银行" ' > selected="true"</if> >中国农业银行</option>
+                        <option <if condition=' $_POST["bank_name"] eq "中国建设银行" ' > selected="true"</if> >中国建设银行</option>
+                       </select>
+                      <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">开户名</td>
+          <td>
+                      <input type="text" name="bank_user" value='<if condition=" isset($_POST[\'bank_user\']) ">{$Think.post.bank_user}<else />{$order.bank_user}</if>' placeholder="输入开户名" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">银行账号</td>
+          <td>
+                      <input type="text" name="bank_card" value='<if condition=" isset($_POST[\'bank_card\']) ">{$Think.post.bank_card}<else />{$order.bank_card}</if>' placeholder="输入银行账号" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">推荐人</td>
+          <td>
+                      <input type="text" name="recommend_user" value='<if condition=" isset($_POST[\'recommend_user\']) ">{$Think.post.recommend_user}<else />{$order.recommend_user}</if>' placeholder="请填入推荐人会员账号，如：ds_zhangsan4587" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">安置人</td>
+          <td>
+                      <input type="text" name="place_user" value='<if condition=" isset($_POST[\'place_user\']) ">{$Think.post.place_user}<else />{$order.place_user}</if>' placeholder="请填入安置人会员账号，如：ds_zhangsan4587" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                  
+                  <tr>
+          <td align="right">报单金额</td>
+          <td>
+            <input type="text" name="money" value='{$Think.post.money}' placeholder="输入报单金额" size="80" class="inpMain w80 num" /> 元<span class='red'>{$error}</span>
+                                 </td>
+         </tr>
+                  <tr>
+          <td align="right">报单类型</td>
+          <td>
+                      <select name="type">
+                        <option value="1" >普通经销商</option>
+                       </select> 
+                      <!-- <span class='red'>*报单类型决定了你成为会员后，是经销商还是生活馆馆主</span> -->
+                                </td>
+         </tr>
+          <tr>
+          <td align="right">订单（所属区域）</td>
+          <td>
+                      <select name="order_province" id='order_province' value=''>
+                       </select>
+                       <select name="order_city" id='order_city'>
+                       </select>
+                       <select name="order_district" id='order_district'>
+                      </select><span class='red'>{$error}</span>
+                      <input type="hidden" name="order_province_name" id="order_province_name">
+                      <input type="hidden" name="order_city_name" id="order_city_name">
+                      <input type="hidden" name="order_district_name" id="order_district_name">
+                       <p class="cue">请在下面地址栏，写上详细的具体地址。</p>
+                                </td>
+         </tr>
+                                    <tr>
+          <td align="right">订单详细地址</td>
+          <td>
+                      <input type="text" name="order_adress" value='<if condition=" isset($_POST[\'order_adress\']) ">{$Think.post.order_adress}<else />{$order.order_adress}</if>' placeholder="请输入详细地址" size="80" class="inpMain" /><span class='red'>{$error}</span>                           </td>
+         </tr>
+                  
+         <tr>
+          <td align="right">邮箱账号</td>
+          <td>
+                      <input type="text" name="email" value='<if condition=" isset($_POST[\'email\']) ">{$Think.post.email}<else />{$order.email}</if>' placeholder="请输入正确的邮箱账号" size="80" class="inpMain" /><span class='red'>*邮箱务必真实，有效{$error}</span>                           </td>
+         </tr>
+        <tr>
+          <td align="right">订单备注</td>
+          <td>
+                      <input type="text" name="remarks" value='<if condition=" isset($_POST[\'remarks\']) ">{$Think.post.remarks}<else />{$order.remarks}</if>' placeholder="请输入订单备注" size="80" class="inpMain" /><span class='red'>*{$error}</span>                           </td>
+         </tr>
+         <tr>
+          <td align="right">合同照片</td>
+          <td>
+                      <div class="shop_goods_cover bg">
+                        <div class="info">只能上传小于1MB的jpg、png、gif图片</div>
+                        <div class="but">
+                          点击上传合同照片
+                          <input type="file" onchange="web.contractUpload('#shop_goods_cover1','#contract_img1','picfile1')" class='file' name='picfile' id='picfile1'>
+                        </div>
+                        <div class="img" id="shop_goods_cover1">
+                          <if condition=" isset($_POST[\'contract_img1\']) ">
+                            <img src="{$Think.post.contract_img1}" alt="">
+                          </if>
+                        </div>
+                      </div>
+                      <div class="shop_goods_cover bg">
+                        <div class="info">只能上传小于1MB的jpg、png、gif图片</div>
+                        <div class="but">
+                          点击上传合同照片
+                          <input type="file" onchange="web.contractUpload('#shop_goods_cover2','#contract_img2','picfile2')" class='file' name='picfile' id='picfile2'>
+                        </div>
+                        <div class="img" id="shop_goods_cover2">
+                          <if condition=" isset($_POST[\'contract_img2\']) ">
+                            <img src="{$Think.post.contract_img2}" alt="">
+                          </if>
+                        </div>
+                      </div>
+                      <div class="shop_goods_cover bg">
+                        <div class="info">只能上传小于1MB的jpg、png、gif图片</div>
+                        <div class="but">
+                          点击上传合同照片
+                          <input type="file" onchange="web.contractUpload('#shop_goods_cover3','#contract_img3','picfile3')" class='file' name='picfile' id='picfile3'>
+                        </div>
+                        <div class="img" id="shop_goods_cover3">
+                          <if condition=" isset($_POST[\'contract_img3\']) ">
+                            <img src="{$Think.post.contract_img3}" alt="">
+                          </if>
+                        </div>
+                      </div>
+                      <div class="shop_goods_cover bg">
+                        <div class="info">只能上传小于1MB的jpg、png、gif图片</div>
+                        <div class="but">
+                          点击上传合同照片
+                          <input type="file" onchange="web.contractUpload('#shop_goods_cover4','#contract_img4','picfile4')" class='file' name='picfile' id='picfile4'>
+                        </div>
+                        <div class="img" id="shop_goods_cover4">
+                          <if condition=" isset($_POST[\'contract_img4\']) ">
+                            <img src="{$Think.post.contract_img4}" alt="">
+                          </if>
+                        </div>
+                      </div>
+                      <div class="clear"></div>
+                      <input type="hidden" name="contract_img1" id='contract_img1' value='<if condition=" isset($_POST[\'contract_img1\']) ">{$Think.post.contract_img1}<else />{$order.contract_img1}</if>' placeholder="合同照片1" size="80" class="inpMain w200" />
+                      <input type="hidden" name="contract_img2" id='contract_img2' value='<if condition=" isset($_POST[\'contract_img2\']) ">{$Think.post.contract_img2}<else />{$order.contract_img2}</if>' placeholder="合同照片2" size="80" class="inpMain w200" />
+                      <input type="hidden" name="contract_img3" id='contract_img3' value='<if condition=" isset($_POST[\'contract_img3\']) ">{$Think.post.contract_img3}<else />{$order.contract_img3}</if>' placeholder="合同照片3" size="80" class="inpMain w200" />
+                      <input type="hidden" name="contract_img4" id='contract_img4' value='<if condition=" isset($_POST[\'contract_img4\']) ">{$Think.post.contract_img4}<else />{$order.contract_img4}</if>' placeholder="合同照片4" size="80" class="inpMain w200" />
+                      <span class='red'>{$error}</span>                           
+                    </td>
+         </tr>
+         
+                 </table>
+        </div>
+        
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+          <td width="131"></td>
+          <td>
+           <input class="btn" type="submit" value="保存" />
+           <input class="btn m10" type="button" onclick="web.saveSubmit()" value="保存并提交" />
+           <input  type="hidden" name='fkey' value="{$Think.session.fkey}" />
+           <input  type="hidden" name='save' id='save' value="0" />
+           <input class="btn m10" type="button" value="返回" onclick='history.back();' />
+          </td>
+         </tr>
+        </table>
+        </form>
+      </div>
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<SCRIPT src="__PUBLIC__js/myjs.js" type="text/javascript"></SCRIPT>
+<script>
+  $(function(){
+
+    //控制左侧货物分类的显示
+    var goodsCateShow=web.getCookie("goodsCateShow")?parseInt(web.getCookie("goodsCateShow")):0;
+    // alert(goodsCateShow);
+    if(goodsCateShow){
+      $('#goodsCate').addClass('more').siblings().hide();
+    }
+
+  })
+</script>
+<div id="dcLeft"><div id="menu">
+ <ul class="top">
+ </ul>
+ <if condition=" in_array($_SESSION['role'], array(1,2,3,4,5)) " >
+ <ul>
+  <li <if condition=" MODULE_NAME eq 'ChooseGoods' and ACTION_NAME eq 'index'" > class="cur" </if> > <a href="{:U('ChooseGoods/index')}"><i class="home"></i><em>全部货物</em></a></li>
+ </ul>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(1,2,3,4,5)) " >
+ <ul>
+  <li id="goodsCate" onclick="web.goodsCateShow(this)"> <a href="javascript:void(0)"><i class="download"></i><em>货物选择</em></a></li>
+  <!-- 货物分类列表 -->
+  <goodsCate order='' limit='' >
+  <li <if condition=" MODULE_NAME eq 'ChooseGoods' and ACTION_NAME eq 'goodsList' and $_GET['cate_id'] eq $cate_id" > class="cur" </if> > <a href="{:U('ChooseGoods/goodsList',array('cate_id'=>\$cate_id))}"><i class="menuPage"></i><em>{$name}</em></a></li>
+  </goodsCate>
+
+ </ul>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(1,2,3,4,5)) " >
+ <ul>
+  <li <if condition=" MODULE_NAME eq 'Finance' " > class="cur" </if> > <a href="{:U('OrderGoods/index')}"><i class="backup"></i><em>返回订货中心</em></a></li>
+ </ul>
+  </if>
+</div></div>

@@ -1,0 +1,79 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 会员中心 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<include file='Common:tongji' />
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>权限修改</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:850px;">
+    <h3>权限修改</h3>
+    <div class="idTabs">
+      <div class="items">
+       <form action="__SELF__" method="post" autocomplete=off >
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+           <th width="131" align='right'>名称</th>
+           <th  align='left'>内容</th>
+         </tr>
+          
+         <tr>
+          <td align="right">角色选择</td>
+          <td>
+                      <select name="role">
+                        <option value="1">普通经销商</option>
+                        <option value="2" <if condition=' ($_POST["role"] eq 2) or ($member["role"] eq 2) ' > selected="true"</if> >生活馆馆主</option>
+                        <option value="3" <if condition=' ($_POST["role"] eq 3) or ($member["role"] eq 3) ' > selected="true"</if> >财务</option>
+                        <option value="4" <if condition=' ($_POST["role"] eq 4) or ($member["role"] eq 4) ' > selected="true"</if> >系统管理员</option>
+                        <option value="5" <if condition=' ($_POST["role"] eq 5) or ($member["role"] eq 5) ' > selected="true"</if> >仓库管理员</option>
+                       </select>
+                       <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                 <tr>
+          <td align="right">会员账号</td>
+          <td>
+                      {$member.user}
+                      <input type="hidden" name="member_id" value='<if condition=" isset($_POST[\'member_id\']) ">{$Think.post.member_id}<else />{$member.member_id}</if>'>
+                      <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                 <tr>
+          <td align="right">姓名</td>
+          <td>
+                      {$member.name}<span class='red'>{$error}</span>
+                                </td>
+         </tr>       
+
+                 </table>
+        </div>
+        
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+          <td width="131"></td>
+          <td>
+           <input name="submit" class="btn" type="submit" value="提交" />
+           <input class="btn" type="button" value="返回" onclick='history.back();' />
+          </td>
+         </tr>
+        </table>
+        </form>
+      </div>
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

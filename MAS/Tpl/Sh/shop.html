@@ -1,0 +1,144 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 生活馆 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__/js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/myjs.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+</style>
+</head>
+<script>
+  var provinceID='<if condition=" isset($_POST[\'province\']) ">{$Think.post.province}<else />{$order.ProvinceID}</if>';
+  var cityID='<if condition=" isset($_POST[\'city\']) ">{$Think.post.city}<else />{$order.CityID}</if>';
+  var districtID='<if condition=" isset($_POST[\'district\']) ">{$Think.post.district}<else />{$order.DistrictID}</if>';
+
+ 
+  $(function(){
+    /**身份证**/
+    /*省级名加载*/
+    web.getProvince('#province');
+
+    /*市级加载*/
+    $('#province').change(function(){
+      var provinceID=$(this).val();
+      var selectIndex = document.getElementById("province").selectedIndex;
+      web.getCity('#city',provinceID);
+      
+    })
+
+    /*区/县级加载*/
+    $('#city').change(function(){
+      var cityID=$(this).val();
+      web.getDistrict('#district',cityID);
+      
+    })
+
+
+    
+
+  })
+</script>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>生活馆信息查询</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3 class='m'>
+          生活馆信息查询
+        </h3>
+        <if condition=" in_array($_SESSION['role'], array(1,2,3,4)) " >
+          <form class="finance_select" id='finance_select' method='post' action='__SELF__'>
+            <div class="member">
+              <span>区域筛选：</span>
+              <select name="province" id='province' value=''>
+                       </select>
+                       <select name="city" id='city'>
+                       </select>
+                       <select name="district" id='district'>
+                      </select>
+            </div>
+            <div class="search" onclick='$("#finance_select").submit();'>查询</div>
+            <div class="search red" onclick='location.href="/Sh/shop";'>重置</div>
+          </form>
+          </if>
+          <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+          <form class="finance_select" id='finance_select_0' method='post' action='__SELF__'>
+            <div class="member">
+              <span>姓名：</span>
+              <input type="text" value='{$Think.post.name}' name='name' placeholder='请输入姓名查询'>
+              <input type="hidden" name='action' value='1'>
+            </div>
+            <div class="search" onclick='$("#finance_select_0").submit();'>查询</div>
+          </form>
+          </if>
+        <div id="list">
+    <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+      <tr>
+        <th width="30" align="center">序号</th>
+        <!-- <th width="100" align="left">会员账号</th> -->
+        <th width="60" align="center">姓名</th>
+        <th width="120" align="center">馆主联系方式</th>
+        <th align="left">所属区域</th>
+        <th width="120" align="center">更新时间</th>
+        <th width="40" align="center">状态</th>
+        <th width="60" align="center">操作</th>
+      </tr>
+      <foreach name="member" item="v">
+      <tr>
+        <td align="center"><php> echo $sort+$key+1; </php></td>
+        <!-- <td>{$v.user}</td> -->
+        <td align="center">{$v.name}</td>
+        <td align="center">{$v.sh_tel}</td>
+        <td align="left">{$v.sh_province}{$v.sh_city}{$v.sh_district}{$v.sh_adress}</a></td>
+        <td align="center">{$v.sh_update_time}</td>
+        <td align="center">
+          <switch name="v.sh_status" >
+            <case value="1"><span style='color:#28B779;'>营业</span></case>
+            <case value="2"><span style='color:#f00;'>试营业</span></case>
+            <case value="3"><span style='color:#0065B0;'>报备</span></case>
+            <case value="4"><span style='color:#0065B0;'>获批</span></case>
+            <case value="5"><span style='color:#666;'>闲置</span></case>
+            </switch>
+        </td>
+        <td align="center">
+          <a href="{:U('Sh/shopView',array('member_id'=>$v['member_id']))}">查看</a>
+          <php>
+
+          //是否可以编辑
+          $isCan=false;
+
+          // 财务、超级管理员
+          if( in_array($_SESSION['role'], array(3,4)) ){
+            $isCan=true;
+          }
+
+        </php>
+         <if condition="$isCan" >
+            | <a href="{:U('Sh/shopEdit',array('member_id'=>$v['member_id']))}">编辑</a>
+          </if>
+      </td>
+      </tr>
+      </foreach>
+
+          </table>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager">{$page}</div>               </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

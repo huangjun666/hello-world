@@ -1,0 +1,70 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 会员中心 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<include file='Common:tongji' />
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>会员中心</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:850px;">
+    <h3>联系方式修改</h3>
+    <div class="idTabs">
+      <div class="items">
+       <form action="__SELF__" method="post" autocomplete=off >
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+           <th width="131" align='right'>名称</th>
+           <th >内容</th>
+         </tr>
+
+         <tr>
+          <td align="right">移动电话</td>
+          <td>
+            <input type="text" name="tel" value='<if condition=" isset($_POST[\'tel\']) ">{$Think.post.tel}<else />{$member.tel}</if>' placeholder="输入移动电话" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">固定电话</td>
+          <td>
+            <input type="text" name="fixed_tel" value='<if condition=" isset($_POST[\'fixed_tel\']) ">{$Think.post.fixed_tel}<else />{$member.fixed_tel}</if>' placeholder="输入固定电话" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">邮箱</td>
+          <td>
+            <input type="text" name="email" value='<if condition=" isset($_POST[\'email\']) ">{$Think.post.email}<else />{$member.email}</if>' placeholder="输入邮箱" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>      
+
+                 </table>
+        </div>
+        
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+          <td width="131"></td>
+          <td>
+           <input name="submit" class="btn" type="submit" value="确定" />
+           <input class="btn" type="button" value="返回" onclick='history.back();' />
+          </td>
+         </tr>
+        </table>
+        </form>
+      </div>
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

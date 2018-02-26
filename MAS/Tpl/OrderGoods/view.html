@@ -1,0 +1,196 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 订货单 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/myjs.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+</head>
+<style>
+#main table{ border-left: #ccc solid 1px; border-top: #ccc solid 1px;}
+#main th{ border-right: #ccc solid 1px; border-bottom: #ccc solid 1px;}
+#main td{ border-right: #ccc solid 1px; border-bottom: #ccc solid 1px;}
+#main tr.white td{ background: #f9f9f9;}
+
+</style>
+<script>
+  $(function(){
+    web.autoComputeGoodsTotal();//自动计算货品总数和总价
+  })
+</script>
+<body>
+<div class="body_bg"></div>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<php> if( $_SESSION['menu']=='Finance' ): </php>
+<include file='Common:menu' />
+<php> elseif($_SESSION['menu']=='Depot'): </php>
+<include file='Common:depot_menu' />
+<php> endif; </php>
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>订货单</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+    <h3>
+      <if condition=" in_array($_SESSION['role'], array(3,4)) and $orderGoods['status'] eq 3" >
+      <a href="{:U('OrderGoods/secondAudit',array('order_id'=>$orderGoods['order_id'],'audit'=>2))}" class="actionBtn red" onclick='$(".body_bg").show()'>二审不通过</a>
+      <a href="{:U('OrderGoods/secondAudit',array('order_id'=>$orderGoods['order_id'],'audit'=>1))}" style='margin:0 20px 0 0; display:inline;' class="actionBtn bg1" onclick='$(".body_bg").show()' >二审通过</a>
+      </if>
+      <if condition=" in_array($_SESSION['role'], array(3,4)) and $orderGoods['status'] eq 4" >
+      <a href="{:U('OrderGoods/thirdAudit',array('order_id'=>$orderGoods['order_id'],'audit'=>2))}" class="actionBtn red" onclick='$(".body_bg").show()'>三审不通过</a>
+      <a href="{:U('OrderGoods/thirdAudit',array('order_id'=>$orderGoods['order_id'],'audit'=>1))}" style='margin:0 20px 0 0; display:inline;' class="actionBtn bg1" onclick='$(".body_bg").show()' >三审通过</a>
+      </if>
+      填写订货单
+    </h3>
+    <div class="idTabs">
+      <div class="items">
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic" style="max-width:950px; color:#333; float:left; background:#fff;">
+         <tr>
+           <th colspan=11 style="font-size:18px; background:#0A8E55; color:#fff;">浪莎订货单</th>
+         </tr>
+         <tr>
+           <td colspan=3><b>会员账号：</b>
+          <empty name="memberInfo" >
+          暂无
+          <else />
+           {$memberInfo.user}({$memberInfo.name})
+         </empty>
+          </td>
+           <td colspan=2><b>姓名：</b>{$orderGoods.name}</td>
+           <td colspan=3><b>联系方式：</b>{$orderGoods.tel}</td>
+           <td colspan=3><b>日期：</b>{$orderGoods.add_time}</td>
+         </tr>
+         <tr>
+           <td colspan=6 class='p5'><b>收货地址：</b>{$orderGoods.goods_address}</td>
+           <td colspan=3><b>报单金额：</b>{$orderGoods.money}</td>
+           <td colspan=2 class='p5'><b>提交限制：</b>{$reward_config.order_discount}元</td>
+         </tr>
+         <tr>
+           <td colspan=6 class='p5'><b>代收货人姓名：</b>{$orderGoods.goods_name}</td>
+           <td colspan=5 class='p5'><b>代收货人联系方式：</b>{$orderGoods.goods_tel}</td>
+         </tr>
+        <tr class='white'>
+          <td><b>货号</b></td>
+          <td><b>货品</b></td>
+          <td><b>尺码</b></td>
+          <td><b>颜色</b></td>
+          <td><b>单价（元）</b></td>
+          <td><b>折扣</b></td>
+          <td><b>数量</b></td>
+          <td><b>已发数量</b></td>
+          <td><b>单位</b></td>
+          <td colspan=2><b>合计（元）</b></td>
+        </tr>
+        <empty name="orderGoodsList">
+          <tr class='white'>
+            <td colspan=11 align='center'>暂无货品</td>
+          </tr>
+          <else />
+          <foreach name="orderGoodsList" item="v">
+          <tr class='white'>
+            <td>{$v.number}</td>
+            <td>{$v.name}</td>
+            <td>{$v.size}</td>
+            <td>{$v.color}</td>
+            <td class="goodsPrice" id="goodsPrice_{$v.goods_id}">{$v.price|floatval}</td>
+            <td class="goodsDiscount" id="goodsDiscount_{$v.goods_id}">{$v.discount}%</td>
+            <td class='orderGoodsNum' id="goodsNum_{$v.goods_id}">{$v.num}</td>
+            <td class='deliverGoodsNum' id="deliverNum_{$v.goods_id}">{$v.deliver_num}</td>
+            <td>{$v.num_unit}</td>
+            <td colspan=2 class='orderGoodsMoney' id="goodsMoney_{$v.goods_id}"><php> echo floatval($v['price']*($v['num']+$v['deliver_num'])*$v['discount']*0.01) </php></td>
+          </tr>
+          </foreach>
+        </empty>
+        
+        <tr class='white'>
+          <td><b>订货单状态：</b></td>
+          <td colspan=4><em class="red f18">
+            <switch name="orderGoods.status" >
+            <case value="1"><span style='color:#666;'>待提交</span></case>
+            <case value="2"><span style='color:#0065B0;'>待发货</span></case>
+            <case value="3"><span style='color:#0065B0;'>发货中</span></case>
+            <case value="4"><span style='color:#DEDA1A;'>待补发</span></case>
+            <case value="5"><span style='color:#DEDA1A;'>待补发</span></case>
+            <case value="6"><span style='color:#DEDA1A;'>待补发</span></case>
+            <case value="7"><span style='color:#28B779;'>完结</span></case>
+            </switch>
+          </em></td>
+          <td><b>总件数:</b></td>
+          <td class="red f16" id="orderGoodsNum">3件</td>
+          <td><b>总计：</b></td>
+          <td colspan=1 class="red f16" id="orderGoodsMoney">4140元</td>
+          <td><b>已发货：</b></td>
+          <td class="red f16" id="deliverGoodsMoney">0元</td>
+        </tr>
+        <tr>
+          <td colspan=11 class='p5'><b>备注：</b>{$orderGoods.remarks}</td>
+        </tr>
+        <tr>
+          <td width=80><strong>温馨提醒：</strong></td>
+          <td align="left" colspan=10 style="line-height:23px; padding:15px 0; color:#666;">
+            <em style="padding:5px 25px; display:inline-block;">
+<php>
+  echo htmlspecialchars_decode(SERVICE('Block')->getBlock('orderGoods_msg'));
+</php></em>
+</td>
+        </tr>
+        <!-- <tr>
+          <td><b>打印日期：</b></td>
+          <td colspan=8><php> echo date('Y-m-d H:i:s') </php></td>
+        </tr> -->
+        </table>
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic" style="margin:0px 0 0 20px; max-width:112px; float:left; display:inline;">
+         <if condition=" (in_array($_SESSION['role'], array(3,4,5)) && in_array($orderGoods['status'], array(1,2,3,4,5))) || (in_array($_SESSION['role'], array(2)) && in_array($orderGoods['status'], array(1))) ">
+         <tr>
+          <td align="right">
+           <input class="btn bg2" style="width:95px;" type="button" onclick="web.goChooseGoods({$orderGoods.order_id})" value="去仓库选货" />
+          </td>
+         </tr>
+         </if>
+         <if condition=" in_array($_SESSION['role'], array(3,4,5)) && in_array($orderGoods['status'], array(2,3,4,5))">
+         <tr>
+          <td align="right">
+           <input class="btn bg3" style="width:95px;" type="button" onclick="web.goDeliverGoods({$orderGoods.order_id})" value="待发发货单" />
+          </td>
+         </tr>
+         </if>
+         <if condition="in_array($orderGoods['status'], array(2,3,4,5,6,7)) ">
+         <tr>
+          <td align="right">
+           <input class="btn bg3" style="width:95px;" type="button" onclick="web.goDeliverGoodsManage({$orderGoods.order_id})" value="发货单管理" />
+          </td>
+         </tr>
+         </if>
+         <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+         <tr>
+          <td align="right">
+           <input class="btn" style="width:95px;" type="button" onclick="web.downloadOrderGoods({$orderGoods.order_goods_id})" value="下载订货单" />
+          </td>
+         </tr>
+        </if>
+         <tr>
+          <td align="right">
+           <input class="btn" style="width:95px;" type="button" value="返回"  onclick="location.href='/OrderGoods/index'" />
+          </td>
+         </tr>
+         <!-- <tr>
+          <td align="right">
+           <input class="btn bg1" style="width:95px;" type="button" value="下载订货单" />
+          </td>
+         </tr> -->
+        </table>
+      </div>
+      
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

@@ -1,0 +1,312 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 系统设置 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__/js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+</head>
+<script>
+  $(function(){
+    //强制数字
+    $('.inpMain').blur(function(){
+        var val=$(this).val();
+        if( isNaN(val) ){
+          $(this).val(0);
+        }
+    });
+  })
+</script>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>奖励设置</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+    <h3>奖励设置</h3>
+    <div class="idTabs">
+      <div class="items">
+       <form action="__SELF__" method="post" autocomplete=off >
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+           <th width="131" align='right'>分销奖</th>
+           <th  align='left'>内容</th>
+         </tr>
+          
+         <tr>
+          <td align="right">一级分销奖</td>
+          <td>
+                      <input type="text" name="fx_one" value="<if condition=" isset($_POST[\'fx_one\']) ">{$Think.post.fx_one}<else />{$reward_config.fx_one}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                 <tr>
+          <td align="right">二级分销奖</td>
+          <td>
+                     <input type="text" name="fx_two" value="<if condition=" isset($_POST[\'fx_two\']) ">{$Think.post.fx_two}<else />{$reward_config.fx_two}</if>" class="inpMain w20"> % 
+                      <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                 <tr>
+          <td align="right">三级分销奖</td>
+          <td>
+                      <input type="text" name="fx_three" value="<if condition=" isset($_POST[\'fx_three\']) ">{$Think.post.fx_three}<else />{$reward_config.fx_three}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr> 
+         <tr>
+           <th width="131" align='right'>辅导奖</th>
+           <th  align='left'>内容</th>
+         </tr>      
+       <tr>
+          <td align="right">辅导奖辐射级别</td>
+          <td>
+                      {$reward_config.fd_level} 级 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                <tr>
+          <td align="right">辅导奖比例</td>
+          <td>
+                      <input type="text" name="fd_percent" value="<if condition=" isset($_POST[\'fd_percent\']) ">{$Think.post.fd_percent}<else />{$reward_config.fd_percent}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+           <th width="131" align='right'>团队奖</th>
+           <th  align='left'>内容</th>
+         </tr>      
+       <tr>
+          <td align="right">团队奖最少部门要求</td>
+          <td>
+                      {$reward_config.td_limit} 个 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                <tr>
+          <td align="right">团队奖一级业绩</td>
+          <td>
+                      <input type="text" name="td_one" value="<if condition=" isset($_POST[\'td_one\']) ">{$Think.post.td_one}<else />{$reward_config.td_one}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">团队奖一级奖励比例</td>
+          <td>
+                      <input type="text" name="td_one_p" value="<if condition=" isset($_POST[\'td_one_p\']) ">{$Think.post.td_one_p}<else />{$reward_config.td_one_p}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+               <tr>
+          <td align="right">团队奖二级业绩</td>
+          <td>
+                      <input type="text" name="td_two" value="<if condition=" isset($_POST[\'td_two\']) ">{$Think.post.td_two}<else />{$reward_config.td_two}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">团队奖二级奖励比例</td>
+          <td>
+                      <input type="text" name="td_two_p" value="<if condition=" isset($_POST[\'td_two_p\']) ">{$Think.post.td_two_p}<else />{$reward_config.td_two_p}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+               <tr>
+          <td align="right">团队奖三级业绩</td>
+          <td>
+                      <input type="text" name="td_three" value="<if condition=" isset($_POST[\'td_three\']) ">{$Think.post.td_three}<else />{$reward_config.td_three}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">团队奖三级奖励比例</td>
+          <td>
+                      <input type="text" name="td_three_p" value="<if condition=" isset($_POST[\'td_three_p\']) ">{$Think.post.td_three_p}<else />{$reward_config.td_three_p}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+               <tr>
+          <td align="right">团队奖四级业绩</td>
+          <td>
+                      <input type="text" name="td_four" value="<if condition=" isset($_POST[\'td_four\']) ">{$Think.post.td_four}<else />{$reward_config.td_four}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">团队奖四级奖励比例</td>
+          <td>
+                      <input type="text" name="td_four_p" value="<if condition=" isset($_POST[\'td_four_p\']) ">{$Think.post.td_four_p}<else />{$reward_config.td_four_p}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+               <tr>
+          <td align="right">团队奖五级业绩</td>
+          <td>
+                      <input type="text" name="td_five" value="<if condition=" isset($_POST[\'td_five\']) ">{$Think.post.td_five}<else />{$reward_config.td_five}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">团队奖五级奖励比例</td>
+          <td>
+                      <input type="text" name="td_five_p" value="<if condition=" isset($_POST[\'td_five_p\']) ">{$Think.post.td_five_p}<else />{$reward_config.td_five_p}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+               <tr>
+          <td align="right">团队奖六级业绩</td>
+          <td>
+                      <input type="text" name="td_six" value="<if condition=" isset($_POST[\'td_six\']) ">{$Think.post.td_six}<else />{$reward_config.td_six}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">团队奖六级奖励比例</td>
+          <td>
+                      <input type="text" name="td_six_p" value="<if condition=" isset($_POST[\'td_six_p\']) ">{$Think.post.td_six_p}<else />{$reward_config.td_six_p}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+               <tr>
+          <td align="right">团队奖七级业绩</td>
+          <td>
+                      <input type="text" name="td_seven" value="<if condition=" isset($_POST[\'td_seven\']) ">{$Think.post.td_seven}<else />{$reward_config.td_seven}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">团队奖七级奖励比例</td>
+          <td>
+                      <input type="text" name="td_seven_p" value="<if condition=" isset($_POST[\'td_seven_p\']) ">{$Think.post.td_seven_p}<else />{$reward_config.td_seven_p}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+               <tr>
+          <td align="right">团队奖八级业绩</td>
+          <td>
+                      <input type="text" name="td_eight" value="<if condition=" isset($_POST[\'td_eight\']) ">{$Think.post.td_eight}<else />{$reward_config.td_eight}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">团队奖八级奖励比例</td>
+          <td>
+                      <input type="text" name="td_eight_p" value="<if condition=" isset($_POST[\'td_eight_p\']) ">{$Think.post.td_eight_p}<else />{$reward_config.td_eight_p}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+          <tr>
+           <th width="131" align='right'>生活馆</th>
+           <th  align='left'>内容</th>
+         </tr>
+         <tr>
+         <td align="right">生活馆收益</td>
+          <td>
+                      <input type="text" name="sh_profit" value="<if condition=" isset($_POST[\'sh_profit\']) ">{$Think.post.sh_profit}<else />{$reward_config.sh_profit}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+           <th width="131" align='right'>分红奖</th>
+           <th  align='left'>内容</th>
+         </tr>
+         <tr>
+         <td align="right">分红奖最少部门要求</td>
+          <td>
+                      <input type="text" name="fh_dep_num" value="<if condition=" isset($_POST[\'fh_dep_num\']) ">{$Think.post.fh_dep_num}<else />{$reward_config.fh_dep_num}</if>" class="inpMain w20"> 个 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">分红奖收益比例</td>
+          <td>
+                      <input type="text" name="fh_profit" value="<if condition=" isset($_POST[\'fh_profit\']) ">{$Think.post.fh_profit}<else />{$reward_config.fh_profit}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">分红次数</td>
+          <td>
+                      <input type="text" name="fh_num" value="<if condition=" isset($_POST[\'fh_num\']) ">{$Think.post.fh_num}<else />{$reward_config.fh_num}</if>" class="inpMain w20"> 次 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">部门总业绩要求</td>
+          <td>
+                      <input type="text" name="fh_limit" value="<if condition=" isset($_POST[\'fh_limit\']) ">{$Think.post.fh_limit}<else />{$reward_config.fh_limit}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">除去最高后，业绩要求</td>
+          <td>
+                      <input type="text" name="fh_limit_other" value="<if condition=" isset($_POST[\'fh_limit_other\']) ">{$Think.post.fh_limit_other}<else />{$reward_config.fh_limit_other}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+           <th width="131" align='right'>订货单</th>
+           <th  align='left'>内容</th>
+         </tr>
+         <tr>
+         <td align="right">订货单金额范围限制在</td>
+          <td>
+                      <input type="text" name="order_discount" value="<if condition=" isset($_POST[\'order_discount\']) ">{$Think.post.order_discount}<else />{$reward_config.order_discount}</if>" class="inpMain w20"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+           <th width="131" align='right'>点位对应工资上限</th>
+           <th  align='left'>内容</th>
+         </tr>
+         <tr>
+         <td align="right">1万点位工资上限</td>
+          <td>
+                      <input type="text" name="point_one" value="<if condition=" isset($_POST[\'point_one\']) ">{$Think.post.point_one}<else />{$reward_config.point_one}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">2万点位工资上限</td>
+          <td>
+                      <input type="text" name="point_two" value="<if condition=" isset($_POST[\'point_two\']) ">{$Think.post.point_two}<else />{$reward_config.point_two}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">4万点位工资上限</td>
+          <td>
+                      <input type="text" name="point_four" value="<if condition=" isset($_POST[\'point_four\']) ">{$Think.post.point_four}<else />{$reward_config.point_four}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">6万点位工资上限</td>
+          <td>
+                      <input type="text" name="point_six" value="<if condition=" isset($_POST[\'point_six\']) ">{$Think.post.point_six}<else />{$reward_config.point_six}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+           <th width="131" align='right'>工资扣税</th>
+           <th  align='left'>内容</th>
+         </tr>
+         <tr>
+         <td align="right">工资扣税起征点</td>
+          <td>
+                      <input type="text" name="tax_money" value="<if condition=" isset($_POST[\'tax_money\']) ">{$Think.post.tax_money}<else />{$reward_config.tax_money}</if>" class="inpMain w80"> 元 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+         <td align="right">工资扣税税率</td>
+          <td>
+                      <input type="text" name="tax_rate" value="<if condition=" isset($_POST[\'tax_rate\']) ">{$Think.post.tax_rate}<else />{$reward_config.tax_rate}</if>" class="inpMain w20"> % <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+           <th width="131" align='right'>推荐人通知</th>
+           <th  align='left'>内容</th>
+         </tr>
+         <tr>
+         <td align="right">推荐人数</td>
+          <td>
+                      <input type="text" name="rec_notice" value="<if condition=" isset($_POST[\'rec_notice\']) ">{$Think.post.rec_notice}<else />{$reward_config.rec_notice}</if>" class="inpMain w20"> 人 <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                 </table>
+        </div>
+        
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+          <td width="131"></td>
+          <td>
+           <input name="submit" class="btn" type="submit" value="提交" />
+           <input class="btn" type="button" value="返回" onclick='history.back();' />
+          </td>
+         </tr>
+        </table>
+        </form>
+      </div>
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

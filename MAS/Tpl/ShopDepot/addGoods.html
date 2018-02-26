@@ -1,0 +1,169 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 商品管理中心 - 添加商品 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/laydate.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/ajaxfileupload.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+  .actionBtn{ margin: 0 20px 0 0;display: inline;}
+</style>
+</head>
+<script>
+  $(function(){
+    //强制数字
+    $('.inpNum').blur(function(){
+        var val=$(this).val();
+        if( isNaN(val) ){
+          $(this).val(0);
+        }
+    });
+  })
+</script>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<php> if( $_SESSION['shop_menu']=='Shop' ): </php>
+<include file='Common:shop_menu' />
+<php> elseif($_SESSION['shop_menu']=='Shop_Depot'): </php>
+<include file='Common:shop_depot_menu' />
+<php> endif; </php>
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 商品管理中心<b>&gt;</b><strong><if condition=" isset($_POST[\'cate\']) ">{$Think.post.cate}<else />{$cate.name}</if></strong><b>&gt;</b><strong>添加商品</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3>
+          添加商品
+        </h3>
+
+    <div class="idTabs">
+      <div class="items">
+       <form action="__SELF__" method="post" autocomplete=off >
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+           <th width="131" align='right'>名称</th>
+           <th  align='left'>内容</th>
+         </tr>
+          
+         <tr>
+          <td align="right">商品名称</td>
+          <td>
+                      <input type="hidden" name="cate" value='<if condition=" isset($_POST[\'cate\']) ">{$Think.post.cate}<else />{$cate.name}</if>' placeholder="输入分类名称" size="80" class="inpMain w200" />
+                      <input type="hidden" name="cate_id" value='<if condition=" isset($_POST[\'cate_id\']) ">{$Think.post.cate_id}<else />{$cate.cate_id}</if>' placeholder="输入分类名称" size="80" class="inpMain w200" />
+                      <input type="text" name="name" value='{$Think.post.name}' placeholder="输入商品名称" size="80" class="inpMain w200" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">商品简介</td>
+          <td>
+                      <textarea class="summary" name="summary" placeholder="输入商品简介">{$Think.post.summary}</textarea>
+                      <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">商品封面图</td>
+          <td>
+                      <div class="shop_goods_cover">
+                        <div class="info">只能上传小于300kb的jpg、png、gif图片</div>
+                        <div class="but">
+                          点击上传封面图
+                          <input type="file" onchange="shop.goodsCoverUpload()" class='file' name='picfile' id='picfile'>
+                        </div>
+                        <div class="img" id="shop_goods_cover"><img src="<if condition=" isset($_POST[\'cover\']) ">{$Think.post.cover}<else />__PUBLIC__/images/default_goods_cover.png</if>" width="240" height="186" alt=""></div>
+                        
+                      </div>
+                      <input type="hidden" name="cover" id='cover' value='<if condition=" isset($_POST[\'cover\']) ">{$Think.post.cover}<else />__PUBLIC__/images/default_goods_cover.png</if>' placeholder="商品封面图" size="80" class="inpMain w200" /><span class='red'>{$error}</span>
+
+                                </td>
+         </tr>
+         
+         <tr>
+          <td align="right">商品编号</td>
+          <td>
+                      <input type="text" name="number" value='{$Think.post.number}' placeholder="输入商品编号" size="80" class="inpMain w200" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">商品尺寸</td>
+          <td>
+                      <input type="text" name="size" value='{$Think.post.size}' placeholder="输入商品尺寸" size="80" class="inpMain w200" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">商品颜色</td>
+          <td>
+                      <input type="text" name="color" value='{$Think.post.color}' placeholder="输入商品颜色" size="80" class="inpMain w200" /> <span class='red'>如：黑色、红色、灰色等</span><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">价格</td>
+          <td>
+                      <input type="text" name="price" value='{$Think.post.price}' placeholder="价格" size="80" class="inpMain w80 inpNum" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">真实价格</td>
+          <td>
+                      <input type="text" name="true_price" value='{$Think.post.true_price}' placeholder="真实价格" size="80" class="inpMain w80 inpNum" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">价格单位</td>
+          <td>
+                      <input type="text" name="price_unit" value='<if condition=" isset($_POST[\'price_unit\']) ">{$Think.post.price_unit}<else />元</if>' placeholder="输入价格单位" size="80" class="inpMain w80" /> <span class='red'>如：元、美元、港币等 </span><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">折扣</td>
+          <td>
+                      <input type="text" name="discount" value='<if condition=" isset($_POST[\'discount\']) ">{$Think.post.discount}<else />100</if>' placeholder="折扣" size="80" class="inpMain w20 inpNum" /> %<span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">数量</td>
+          <td>
+                      0<span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">数量单位</td>
+          <td>
+                      <input type="text" name="num_unit" value='<if condition=" isset($_POST[\'num_unit\']) ">{$Think.post.num_unit}<else />件</if>' placeholder="输入数量单位" size="80" class="inpMain w80" /> <span class='red'>如：件、套、双等 </span><span class='red'>{$error}</span>
+                                </td>
+         </tr> 
+         <tr>
+          <td align="right">排序权重</td>
+          <td>
+                     <input type="text" name="sort" value='<if condition=" isset($_POST[\'sort\']) ">{$Think.post.sort}<else />1</if>' placeholder="输入权重" size="80" class="inpMain w80 inpNum" /> <span class='red'>提示：数值越大，越显示在前面 </span><span class='red'>{$error}</span>
+                                </td>
+         </tr>     
+
+                 </table>
+        </div>
+        
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+          <td width="131"></td>
+          <td>
+           <input name="submit" class="btn" type="submit" value="确定" />
+           <input class="btn" type="button" value="返回" onclick='history.back();' />
+          </td>
+         </tr>
+        </table>
+        </form>
+      </div>
+    </div>
+    </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

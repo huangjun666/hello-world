@@ -1,0 +1,236 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 重销商城 - 订单编辑 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/myjs.js" type="text/javascript"></SCRIPT>
+<link href="__PUBLIC__fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__fancybox/jquery.fancybox.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+</head>
+<style>
+#main table{ border-left: #ccc solid 1px; border-top: #ccc solid 1px;}
+#main th{ border-right: #ccc solid 1px; border-bottom: #ccc solid 1px;}
+#main td{ border-right: #ccc solid 1px; border-bottom: #ccc solid 1px;}
+#main tr.white td{ background: #f9f9f9;}
+table a{ color: #111; text-decoration: underline;}
+table a:hover{ color: #0072C6;}
+
+</style>
+<script>
+  $(function(){
+    web.autoComputeGoodsTotal();//自动计算货品总数和总价
+    // var str="goodsPrice_1234";
+    //     str=str.substr(11);
+    // var num=parseInt(str);
+    // alert(num);
+  })
+</script>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<php> if( $_SESSION['shop_menu']=='Shop' ): </php>
+<include file='Common:shop_menu' />
+<php> elseif($_SESSION['shop_menu']=='Shop_Depot'): </php>
+<include file='Common:shop_depot_menu' />
+<php> endif; </php>
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 重销商城<b>></b><strong>购物车</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+    <h3>
+      
+      编辑订单<p style="color:#078E31; font-size:13px;">说明：订单最低额度，1000元起步！</p>
+    </h3>
+    <div class="idTabs">
+      <div class="items">
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic" style="max-width:950px; color:#333; float:left; background:#fff;">
+         <tr>
+           <th colspan=11 style="font-size:18px; background:#0A8E55; color:#fff;">重销订单</th>
+         </tr>
+         <tr>
+          <td colspan=3><b>会员账号：</b>{$shopOrder.user}</td>
+           <td colspan=2><b>会员姓名：</b>{$shopOrder.name}</td>
+           <td colspan=3><b>会员联系方式：</b>{$shopOrder.tel}</td>
+           <td colspan=3><b>日期：</b>{$shopOrder.add_time}</td>
+         </tr>
+         <tr>
+          <td colspan=5 class='p5'>
+            <if condition="$shopOrder['status'] eq 1 and $shopOrder['member_id'] eq $_SESSION['uid']" >
+            <em class='cart_address'><a href="{:U('ShopCart/addressList')}"  style="color:#0072C6;">地址管理</a></em>
+            </if>
+            <b>收货地址：</b>
+            <empty name="shopOrder.agent_address">请使用【地址管理】进行相关操作<else /> {$shopOrder.agent_address}</empty>
+
+            
+          </td>
+          <td colspan=3 class='p5'><b>物流公司：</b>
+            <if condition=" $shopOrder['status'] eq 1">
+              由商家提供
+              <else/>
+              <select name="logistics_company" id="logistics_company">
+              <option value="0">请选择</option>
+              <foreach name='logisticsCompany' item='v'>
+                <option value="{$v.type}" <if condition="$v['type'] eq $shopOrder['logistics_company']" > selected=true </if> >{$v.name}</option>
+              </foreach>
+            </select>
+            </if>
+           </td>
+           <td colspan=3 class='p5'><b>运单号：</b>
+            <if condition=" $shopOrder['status'] eq 1">
+              由商家提供
+              <else/>
+              <input type='text' class="inpMain w120 h16 b1" id="waybill_number" value='{$shopOrder.waybill_number}' placeholder="请输入物流单号">
+            </if>
+          </td>
+         </tr>
+         <tr>
+          <td colspan=5 class='p5'>
+            <if condition="$shopOrder['status'] eq 1 and $shopOrder['member_id'] eq $_SESSION['uid']" >
+            <em class='cart_address'><a href="{:U('ShopCart/addressList')}"  style="color:#0072C6;">地址管理</a></em>
+            </if>
+            <b>收货人姓名：</b>
+            <empty name="shopOrder.agent_name">无<else /> {$shopOrder.agent_name}</empty>
+          </td>
+          <td colspan=4 class='p5'>
+            <if condition="$shopOrder['status'] eq 1 and $shopOrder['member_id'] eq $_SESSION['uid']" >
+            <em class='cart_address'><a href="{:U('ShopCart/addressList')}"  style="color:#0072C6;">地址管理</a></em>
+            </if>
+            <b>收货人联系方式：</b>
+            <empty name="shopOrder.agent_tel">无<else /> {$shopOrder.agent_tel}</empty>
+          </td>
+           <td colspan=2 class='p5 red'><b>订单金额：</b><em id='orderGoodsMoney1'>{$shopOrder.money|round=###,1}元</em></td>
+         </tr>
+         <!-- <tr>
+          <td colspan=6 class='p5'><em class='cart_address'><a href="###"  style="color:#0072C6;">地址管理</a></em><b>收货地址：</b>云南省普洱市思茅区第一百货2-103号商铺</td>
+          <td colspan=5></td>
+           
+         </tr> -->
+        <tr class='white'>
+          <td><b>货号</b></td>
+          <td colspan=2><b>货品</b></td>
+          <td><b>尺码</b></td>
+          <td><b>颜色</b></td>
+          <td><b>单价（元）</b></td>
+          <td><b>折扣</b></td>
+          <td><b>数量</b></td>
+          <td><b>单位</b></td>
+          <td><b>合计（元）</b></td>
+          <td><b>操作</b></td>
+        </tr>
+          <empty name="orderGoodsList">
+          <tr class='white'>
+            <td colspan=11 align='center'>暂无货品</td>
+          </tr>
+          <else />
+          <foreach name="orderGoodsList" item="v">
+          <tr class='white orderGoodsList'>
+            <td>{$v.number}</td>
+            <td colspan=2><a class='c1' href="{:U('Shop/goodsView',array('goods_id'=>$v['goods_id'],'cate_id'=>$v['cate_id'],'shop_order_id'=>I('shop_order_id',0,'intval')))}">{$v.name}</a></td>
+            <td>{$v.size}</td>
+            <td>{$v.color}</td>
+            <td class="goodsPrice" id="goodsPrice_{$v.goods_id}">{$v.price|floatval}</td>
+            <td class="goodsDiscount" id="goodsDiscount_{$v.goods_id}">{$v.discount}%</td>
+            <td class='orderGoodsNum' id="goodsNum_{$v.goods_id}">{$v.num}</td>
+            <td>{$v.num_unit}</td>
+            <td class='orderGoodsMoney' id="goodsMoney_{$v.goods_id}"><php> echo floatval(($v['price']*($v['num'])*$v['discount']*0.01)) </php></td>
+            <td><a href="javascript:void(0)" onclick="shop.chooseGoodsDialog({$Think.get.shop_order_id},{$v.goods_id},'{$v.name}','{$v.number}','{$v.num_unit}','{$v.price|floatval}','{$v.discount}','{$v.price_unit}','add')">退回</a>
+          </td>
+          </tr>
+          </foreach>
+        </empty>
+          
+        
+        <tr class='white'>
+          <td><b>订单状态：</b></td>
+          <td colspan=5><em class="red f18">
+            <switch name="shopOrder.status" >
+            <case value="1"><span style='color:#f00;'>下单中</span></case>
+            <case value="2"><span style='color:#0065B0;'>准备发货</span></case>
+            <case value="3"><span style='color:#0065B0;'>发货中</span></case>
+            <case value="4"><span style='color:#DEDA1A;'>已发货</span></case>
+            <case value="5"><span style='color:#28B779;'>完结</span></case>
+            </switch>
+          </em></td>
+          <td><b>总件数:</b></td>
+          <td class="red f16" id="orderGoodsNum">3件</td>
+          <td><b>总计：</b></td>
+          <td colspan=2 class="red f16" id="orderGoodsMoney">4140元</td>
+        </tr>
+        <tr>
+          <td colspan=11 class='p5'><b>备注：</b><input type='text' id='remarks' class="inpMain w735 h16 b1" value='{$shopOrder.remarks}' placeholder="请在此处写上备注"></td>
+        </tr>
+        <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+          <tr>
+            <td colspan=11 class='red f16'><b>真实总价：</b>{$shopOrder.true_money|round=###,1}元</td>
+          </tr>
+        </if>
+        <!-- <tr>
+          <td><b>打印日期：</b></td>
+          <td colspan=9><php> echo date('Y-m-d H:i:s') </php></td>
+        </tr> -->
+        </table>
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic" style="margin:0px 0 0 20px; max-width:112px; float:left; display:inline;">
+          <if condition=" ( in_array($_SESSION['role'], array(3,4,5)) && in_array($shopOrder['status'], array(1,2,3)) ) || (in_array($_SESSION['role'], array(2)) && in_array($shopOrder['status'], array(1))) ">
+         <tr>
+          <td align="right">
+           <input class="btn bg2" style="width:95px;" type="button" onclick="shop.goChooseGoods({$shopOrder.shop_order_id})" value="去商城选货" />
+          </td>
+         </tr>
+         </if>
+         <if condition=" in_array($shopOrder['status'], array(1,2,3)) ">
+         <tr>
+          <td align="right">
+           <input class="btn" style="width:95px;" type="button" onclick='shop.orderGoodsSave({$shopOrder.shop_order_id},0)' value="保存一下" />
+          </td>
+         </tr>
+         </if>
+         <if condition=" in_array($shopOrder['status'], array(1)) ">
+         <tr>
+          <td align="right">
+           <input class="btn" style="width:95px;" id="saveAndDeliver" type="button" onclick='shop.orderGoodsSave({$shopOrder.shop_order_id},1)' value="保存并提交" />
+          </td>
+         </tr>
+         </if>
+         <if condition=" in_array($shopOrder['status'], array(2,3)) ">
+         <tr>
+          <td align="right">
+           <input class="btn" style="width:95px;" id="saveAndDeliver" type="button" onclick='shop.orderGoodsSave({$shopOrder.shop_order_id},2)' value="保存并发货" />
+          </td>
+         </tr>
+         </if>
+         
+         
+         <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+         <tr>
+          <td align="right">
+           <input class="btn bg1" style="width:95px;" type="button" onclick="shop.downloadOrderGoods({$shopOrder.shop_order_id})" value="下载订单" />
+          </td>
+         </tr>
+        <tr>
+          <td align="right">
+           <input class="btn bg4" style="width:95px;" type="button" value="完结" onclick='shop.endOrderGoods({$shopOrder.shop_order_id})' />
+          </td>
+         </tr>
+         </if>
+         <tr>
+          <td align="right">
+           <input class="btn" style="width:95px;" type="button" value="返回" onclick='history.back();' />
+          </td>
+         </tr>
+        </table>
+      </div>
+      
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

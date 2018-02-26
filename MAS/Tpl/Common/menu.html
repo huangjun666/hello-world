@@ -1,0 +1,83 @@
+<div id="dcLeft"><div id="menu">
+ <ul class="top">
+ </ul>
+
+ <ul>
+   <if condition=" in_array($_SESSION['role'], array(4)) " >
+  <li <if condition=" MODULE_NAME eq 'System' and ACTION_NAME eq 'index'" > class="cur" </if> > <a href="{:U('System/index')}"><i class="system"></i><em>奖励设置</em></a></li>
+  <li <if condition=" MODULE_NAME eq 'System' and ACTION_NAME eq 'auditList'" > class="cur" </if> > <a href="{:U('System/auditList')}"><i class="system"></i><em>奖励设置审核</em></a></li>
+  <li <if condition=" MODULE_NAME eq 'System' and ACTION_NAME eq 'white'" > class="cur" </if> > <a href="{:U('System/white')}"><i class="white-list"></i><em>白名单</em></a></li>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+  <li <if condition=" MODULE_NAME eq 'Block'" > class="cur" </if> > <a href="{:U('Block/index')}"><i class="edit"></i><em>块内容设置</em></a></li>
+  </if>
+ </ul>
+  
+  <if condition=" in_array($_SESSION['role'], array(1,2,3,4)) " >
+ <ul>
+  <li <if condition=" MODULE_NAME eq 'News'" > class="cur" </if> > <a href="{:U('News/index')}"><i class="article"></i><em>通知栏</em></a></li>
+ </ul>
+  </if>
+   <ul>
+    <if condition=" in_array($_SESSION['role'], array(1,2,3,4)) " >
+  <li <if condition=" MODULE_NAME eq 'Order' and ACTION_NAME neq 'add' " > class="cur" </if> ><a href="{:U('Order/index')}"><i class="productCat"></i><em>订单管理</em></a></li>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(2,4)) " >
+  <li <if condition=" MODULE_NAME eq 'Order' and ACTION_NAME eq 'add' " > class="cur" </if> ><a href="{:U('Order/add')}"><i class="product"></i><em>添加订单</em></a></li>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(1,2,3,4,5)) " >
+  <li <if condition=" MODULE_NAME eq 'OrderGoods' and ACTION_NAME eq 'index' " > class="cur" </if> ><a href="{:U('OrderGoods/index')}"><i class="inGoods"></i><em>订货管理</em></a></li>
+  <li <if condition=" MODULE_NAME eq 'DeliverGoods' and ACTION_NAME eq 'index' " > class="cur" </if> ><a href="{:U('DeliverGoods/index')}"><i class="outGoods"></i><em>发货管理</em></a></li>
+  </if>
+ </ul>
+ <php> $sh=SERVICE('System')->get_white_config('sh');</php>
+ <if condition=" in_array($_SESSION['role'], array(2,3,4)) or in_array($_SESSION['user'], $sh) " >
+ <ul>
+  <li <if condition=" MODULE_NAME eq 'Sh'  and ACTION_NAME eq 'shop' " > class="cur" </if> ><a href="{:U('Sh/shop')}"><i class="sh"></i><em>生活馆信息查询</em></a></li>
+  <li <if condition=" MODULE_NAME eq 'Sh'  and ACTION_NAME eq 'index' " > class="cur" </if> ><a href="{:U('Sh/index')}"><i class="manager"></i><em>会员信息查询</em></a></li>
+ </ul>
+ </if>
+  <ul>
+  <if condition=" in_array($_SESSION['role'], array(1,2,3,4)) " >
+  <li <if condition=" MODULE_NAME eq 'Finance'  and ACTION_NAME eq 'index' " > class="cur" </if> ><a href="{:U('Finance/index')}"><i class="backup"></i><em>财务管理</em></a></li>
+  <li <if condition=" MODULE_NAME eq 'Finance'  and ACTION_NAME eq 'log' " > class="cur" </if> ><a href="{:U('Finance/log')}"><i class="backup"></i><em>财务工资结算</em></a></li>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(2,3,4)) " >
+  <li <if condition=" MODULE_NAME eq 'Finance'  and ACTION_NAME eq 'guanzhuLog' " > class="cur" </if> ><a href="{:U('Finance/guanzhuLog')}"><i class="backup"></i><em>馆主收益</em></a></li>
+   </if>
+  <if condition=" in_array($_SESSION['role'], array(4)) " >
+  <li <if condition=" MODULE_NAME eq 'Finance'  and ACTION_NAME eq 'coachPercentLog' " > class="cur" </if> ><a href="{:U('Finance/coachPercentLog')}"><i class="data"></i><em>辅导奖比例日志</em></a></li>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(4)) " >
+  <li <if condition=" MODULE_NAME eq 'Member'  and ACTION_NAME eq 'star' " > class="cur" </if> ><a href="{:U('Member/star')}"><i class="star"></i><em>星级董事</em></a></li>
+  </if>
+  <php> $tree=SERVICE('System')->get_white_config('tree');</php>
+    <if condition=" in_array($_SESSION['user'],$tree) " >
+  <li <if condition=" MODULE_NAME eq 'Tree'" > class="cur" </if> > <a href="{:U('Tree/index')}"><i class="article"></i><em>经销商树状结构</em></a></li>
+  </if>
+ </ul>
+ <ul>
+  <if condition=" in_array($_SESSION['role'], array(4)) " >
+   <li <if condition=" MODULE_NAME eq 'Rights' and in_array(ACTION_NAME, array('index','edit')) " > class="cur" </if> ><a href="{:U('Rights/index')}"><i class="articleCat"></i><em>权限管理</em></a></li>
+   <li <if condition=" MODULE_NAME eq 'Rights' and in_array(ACTION_NAME, array('audit')) " > class="cur" </if> ><a href="{:U('Rights/audit')}"><i class="articleCat"></i><em>权限管理审核</em></a></li>
+   </if>
+  <li <if condition=" MODULE_NAME eq 'Member' and ACTION_NAME neq 'pwd' and ACTION_NAME neq 'editInfo' and ACTION_NAME neq 'star' and ACTION_NAME neq 'auditList' and ACTION_NAME neq 'auditView' " > class="cur" </if> ><a href="{:U('Member/index')}"><i class="manager"></i><em>会员中心</em></a></li>
+  <if condition=" in_array($_SESSION['role'], array(4)) " >
+    <li <if condition=" MODULE_NAME eq 'Member' and in_array(ACTION_NAME, array('auditList','auditView')) " > class="cur" </if> ><a href="{:U('Member/auditList')}"><i class="manager"></i><em>会员信息审核</em></a></li>
+  </if>
+  <li <if condition=" MODULE_NAME eq 'Member' and ACTION_NAME eq 'pwd'  " > class="cur" </if> ><a href="{:U('Member/pwd')}"><i class="theme"></i><em>密码修改</em></a></li>
+  <if condition=" in_array($_SESSION['role'], array(1,2)) " >
+  <li <if condition=" MODULE_NAME eq 'Member' and ACTION_NAME eq 'editInfo'  " > class="cur" </if> ><a href="{:U('Member/editInfo')}"><i class="mobile"></i><em>联系方式修改</em></a></li>
+  </if>
+ </ul>
+ 
+ <ul>
+  <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+  <li <if condition=" MODULE_NAME eq 'Depot'" > class="cur" </if> > <a href="{:U('Depot/index')}"><i class="home"></i><em>仓库管理</em></a></li>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(2,3,4,5)) " >
+  <li <if condition=" MODULE_NAME eq 'Shop'" > class="cur" </if> > <a href="{:U('Shop/index',array('shop_order_id'=>I('shop_order_id',0,'intval')))}"><i class="shop"></i><em>重销商城</em></a></li>
+  </if>
+ </ul>
+  
+</div></div>

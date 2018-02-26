@@ -1,0 +1,205 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 会员中心 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<include file='Common:tongji' />
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 会员信息审核<b>></b><strong>会员信息审核</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:850px;">
+    <h3>会员信息审核</h3>
+    <p style='margin:-20px 0 10px 0; color:#078E31;' ><span class='red' >备注：红色部分，表示会员信息发生变化的部分</span></p>
+    <div class="idTabs">
+      <div class="items">
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+           <th width="131" align='right'>名称</th>
+           <th width="150" align='left' >内容</th>
+           <th align='left' >变更情况</th>
+         </tr>
+                  <tr>
+          <td align="right">会员账号</td>
+          <td>
+                      {$member_audit.user}
+          </td>
+          <td></td>
+         </tr>
+                  <tr>
+          <td align="right">姓名</td>
+          <td>
+                      {$member_audit.name}
+          </td>
+          <td></td>
+         </tr>
+
+                  <tr>
+          <td align="right" class="green">开户银行</td>
+          <td class="green">
+                      {$member_audit.bank_name_before}
+          </td>
+          <td class="green"> 
+            <if condition=" $member_audit['bank_name_before'] eq $member_audit['bank_name']" >
+                      {$member_audit.bank_name}
+                    <else />
+                    <span class="red">{$member_audit.bank_name}</span>
+                    </if>
+          </td>                   
+         </tr>
+          <tr>
+          <td align="right" class="green">开户名</td>
+          <td class="green">
+                      {$member_audit.bank_user_before}
+          </td>            
+          <td class="green">
+                      <if condition=" $member_audit['bank_user_before'] eq $member_audit['bank_user']" >
+                        {$member_audit.bank_user}
+                      <else />
+                      <span class="red">{$member_audit.bank_user}</span>
+                      </if>
+          </td>
+         </tr>
+          <tr>
+          <td align="right" class="green">银行账号</td>
+          <td class="green">
+                       {$member_audit.bank_card_before}
+                      
+          </td>
+          <td class="green">
+                      <if condition=" $member_audit['bank_card_before'] eq $member_audit['bank_card']" >
+                        {$member_audit.bank_card}
+                      <else />
+                      <span class="red">{$member_audit.bank_card}</span>
+                      </if>
+          </td>
+         </tr>
+         <tr>
+          <td align="right" class="green">点位信息</td>
+          <td class="green">        
+                      {$member_audit.point_before}万
+                      
+         </td>
+         <td class="green">
+                      <if condition=" $member_audit['point_before'] eq $member_audit['point']" >
+                        {$member_audit.point}万
+                      <else />
+                      <span class="red">{$member_audit.point}万</span>
+                      </if>
+         </td>
+         </tr>
+         <tr>
+          <td align="right" class="green">推荐人</td>
+          <td class="green">        
+                      {$member_audit.recommend_user_before}
+         </td>
+         <td class="green"> 
+                      <if condition=" $member_audit['recommend_user_before'] eq $member_audit['recommend_user']" >
+                        {$member_audit.recommend_user}
+                      <else />
+                      <span class="red">{$member_audit.recommend_user}</span>
+                      </if>
+         </td>
+         </tr>
+         <tr>
+          <td align="right" class="green">所属生活馆主</td>
+          <td class="green">        
+                      {$member_audit.handle_before}
+         </td>
+         <td class="green">
+                      <if condition=" $member_audit['handle_before'] eq $member_audit['handle']" >
+                        {$member_audit.handle}
+                      <else />
+                      <span class="red">{$member_audit.handle}</span>
+                      </if>
+         </td>
+         </tr>
+         <tr>
+          <td align="right" class="green">会员状态</td>
+          <td class="green">        
+                      <switch name="member_audit.member_status_before" >
+                        <case value="1">激活</case>
+                        <case value="2">冻结</case>
+                      </switch>
+         </td>
+         <td class="green">
+                      <if condition=" $member_audit['member_status_before'] eq $member_audit['member_status']" >
+                        <switch name="member_audit.member_status" >
+                          <case value="1">激活</case>
+                          <case value="2">冻结</case>
+                        </switch>
+                      <else />
+                        <span class="red">
+                          <switch name="member_audit.member_status" >
+                            <case value="1">激活</case>
+                            <case value="2">冻结</case>
+                          </switch>
+                        </span>
+                      </if>
+         </td>
+         </tr>
+         <tr>
+          <td align="right">时间</td>
+          <td>
+                      {$member_audit.add_time}
+                                </td>
+          <td></td>
+         </tr>
+         <tr>
+          <td align="right">提交人员</td>
+          <td>
+                      {$member_audit.audit_user}({$member_audit.audit_name})
+                                </td>
+          <td></td>
+         </tr>
+         <tr>
+          <td align="right">审核人员</td>
+          <td>
+                      {$member_audit.handle_user}({$member_audit.handle_name})
+                                </td>
+          <td></td>
+         </tr>
+         
+         <tr>
+          <td align="right">审核状态</td>
+          <td colspan=2>
+                      <switch name="member_audit.status" >
+                        <case value="1"><span style='color:#666;'>待审核</span></case>
+                        <case value="2"><span style='color:#28B779;'>通过</span></case>
+                        <case value="3"><span style='color:#f00;'>不通过</span></case>
+                      </switch>
+                                </td>
+         </tr>
+                 </table>
+        </div>
+        
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+          <td width="131"></td>
+          <td>
+            <if condition=" $member_audit['status'] eq 1 " >
+           <a class="btn bg2" href="{:U('Member/pass',array('id'=>$member_audit['id'],'audit'=>1))}">不通过</a>
+           <a class="btn bg1 m20" href="{:U('Member/pass',array('id'=>$member_audit['id'],'audit'=>2))}">通过</a>
+           <else />
+            </if>
+            <a class="btn m20" href="{:U('Member/auditList')}">返回</a>
+          </td>
+         </tr>
+        </table>
+      </div>
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

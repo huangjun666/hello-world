@@ -1,0 +1,98 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 商品管理中心 - {$cate.name} </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<link href="__PUBLIC__fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/laydate.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/action.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__fancybox/jquery.fancybox.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+  .actionBtn{ margin: 0 20px 0 0;display: inline;}
+</style>
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<php> if( $_SESSION['shop_menu']=='Shop' ): </php>
+<include file='Common:shop_menu' />
+<php> elseif($_SESSION['shop_menu']=='Shop_Depot'): </php>
+<include file='Common:shop_depot_menu' />
+<php> endif; </php>
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 商品管理中心<b>></b><strong>{$cate.name}</strong> </div>   <div class="mainBox w1200" style="height:auto!important;height:550px;min-height:550px;">
+        <h3 class='m'>
+          <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+          <a href="{:U('ShopDepot/addGoods',array('cate_id'=>$cate['cate_id']))}" class="actionBtn add">添加商品</a>
+          </if>
+          {$cate.name}
+        </h3>
+        <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+          <form class="finance_select" id='finance_select' method='post' action='__SELF__'>
+            <div class="member">
+              <span>商品名称：</span>
+              <input type="text" value='{$Think.post.name}' name='name' placeholder='请输入商品名称'>
+              <input type="hidden" value='<if condition=" isset($_POST[\'cate_id\']) ">{$Think.post.cate_id}<else />{$cate.cate_id}</if>' name='cate_id'>
+            </div>
+            <div class="search" onclick='$("#finance_select").submit();'>查询</div>
+          </form>
+          </if>
+        <div id="list">
+      <!-- 商品图片列表 -->
+          <div class="shop_goods_list">
+            <ul>
+              <foreach name='goodsList' item='v'>
+              <li>
+                <div class="img">
+                  <a href="{:U('ShopDepot/goodsView',array('goods_id'=>$v['goods_id'],'cate_id'=>$v['cate_id']))}"><img src="{$v.cover}" width="240" height="186" alt=""></a>
+                </div>
+                <div class="info">
+                  <span class='left'>价格：<em>{$v.price|floatval}{$v.price_unit}</em>({$v.true_price|floatval})</span>
+                  <span class='right'><em class='f' id="goodsNum_{$v.goods_id}">{$v.num}</em>{$v.num_unit}</span>
+                  <span class='left'>折扣：<em>{$v.discount}%</em></span>
+                  <span class='right'>颜色：{$v.color}</span>
+                  <span class='left'>尺码：{$v.size}</span>
+                  <span class='right'>
+                    <b class='but <if condition=" $v['status'] eq 1 " >stop <else/> start </if>' onclick="shop.goodsStop(this,{$v.goods_id},{$v.status})">
+                      <switch name="v.status" >
+                      <case value="1">停售</case>
+                      <case value="3">恢复</case>
+                      </switch>
+                    </b>
+                  </span>
+                  <span class='left'>货号：{$v.number}</span>
+                </div>
+                <div class="title">
+                  <div class="name">{$v.name}</div>
+                  <div class="tools">
+                    <div class="quitDepot" onclick="shop.goodsDialog({$v.goods_id},'{$v.name}','{$v.number}','{$v.num_unit}','del')">出库</div>
+                    <div class="joinDepot" onclick="shop.goodsDialog({$v.goods_id},'{$v.name}','{$v.number}','{$v.num_unit}','add')">入库</div>
+                    <div class="edit"><a href="{:U('ShopDepot/editGoods',array('goods_id'=>$v['goods_id'],'cate_id'=>$v['cate_id']))}">编辑</a></div>
+                    <div class="del"><a href="{:U('ShopDepot/delGoods',array('goods_id'=>$v['goods_id'],'cate_id'=>$v['cate_id']))}">删除</a></div>
+                  </div>
+                </div>
+              </li>
+              </foreach>
+            </ul>
+          </div>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager w1085">{$page}</div>
+    </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

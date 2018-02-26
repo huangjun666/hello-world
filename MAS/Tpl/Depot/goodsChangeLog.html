@@ -1,0 +1,84 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 货物出库入库记录 </title>
+<link href="__PUBLIC__css/public.css" rel="stylesheet" type="text/css">
+<link href="__PUBLIC__fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/laydate.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__fancybox/jquery.fancybox.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+  .actionBtn{ margin: 0 20px 0 0;display: inline;}
+</style>
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:depot_menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>货物出库入库记录</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3 class='m'>货物出库入库记录<br></h3>
+        <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+          <form class="finance_select" id='finance_select' method='get' action='__SELF__'>
+            <div class="member">
+              <span>货物名称：</span>
+              <input type="text" value='{$Think.get.name}' name='name' placeholder='请输入货物名称'>
+              <input type="hidden" name='p' value='1'>
+            </div>
+            <div class="search" onclick='$("#finance_select").submit();'>查询</div>
+          </form>
+          </if>
+        <div id="list">
+    <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+      <tr>       
+        <th width="30" align="center">序号</th>
+        <th align="left">货品</th>
+        <th width="150" align="left">货号</th>
+        <th width="100" align="left">尺码</th>
+        <th width="100" align="left">颜色</th>
+        <th width="100" align="left">变动数量</th>
+        <th width="70" align="left">动作</th>
+        <th width="150" align="left">时间</th>
+        <th width="130" align="left">操作者</th>
+      </tr>
+      <foreach name='goodsLogList' item='v'>
+      <tr>
+        <td align="center"><php> echo $sort+$key+1; </php></td>
+        <td align="left">{$v.name}</td>
+        <td align="left">{$v.number}</td>
+        <td align="left">{$v.size}</td>
+        <td align="left">{$v.color}</td>
+        <td align="left">{$v.num}{$v.num_unit}</td>
+        <td align="left">
+            <switch name="v.type" >
+            <case value="1">出库</case>
+            <case value="2">入库</case>
+            <case value="3">订货</case>
+            <case value="4">退货</case>
+            </switch>
+        </td>
+        <td align="left">{$v.add_time}</td>
+        <td align="left">{$v.handle_name}({$v.handle_user})</td>
+      </tr>
+      </foreach>
+          </table>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager">{$page}</div>
+    </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

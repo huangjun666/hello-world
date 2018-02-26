@@ -1,0 +1,91 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 财务管理 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/laydate.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+  .actionBtn{ margin: 0 20px 0 0;display: inline;}
+</style>
+<script>
+  $(function(){
+    //计算各项奖励之和
+    var obj=$('.tableBasic tr');
+    obj.each(function(i){
+        if( i > 0 ){
+          var td=$(this).children('td');
+          var rec_reward=parseFloat(td.eq(3).text());
+          var team_reward=parseFloat(td.eq(4).text());
+          var coach_reward=parseFloat(td.eq(6).text());
+          var sh_reward=parseFloat(td.eq(7).text());
+          var total=rec_reward+team_reward+coach_reward+sh_reward;
+          td.eq(8).text(total);
+        }
+    })
+  })
+</script>
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>财务管理</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3 class='m'>财务报表<br><em>说明：由于辅导奖算法的特殊性，辅导奖于每天凌晨统一更新计算。</em></h3>
+          <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+          <form class="finance_select" id='finance_select' method='post' action='__SELF__'>
+            <div class="member">
+              <span>会员账号：</span>
+              <input type="text" value='{$Think.post.user}' name='user' placeholder='请输入会员账号'>
+            </div>
+            <div class="search" onclick='$("#finance_select").submit();'>查询</div>
+          </form>
+          </if>
+        <div id="list">
+    <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+      <tr>       
+        <th width="30" align="center">序号</th>
+        <th align="left">会员账号</th>
+        <th width="150" align="left">联系方式</th>
+        <th width="100" align="left">分销奖</th>
+        <th width="100" align="left">业绩奖</th>
+        <th width="100" align="left">分红奖</th>
+        <th width="100" align="left">辅导奖</th>
+        <th width="100" align="left">生活馆收益</th>
+        <th width="130" align="left">总计</th>
+      </tr>
+      <foreach name="member" item="v">
+      <tr>
+        <td align="center"><php> echo $sort+$key+1; </php></td>
+        <td align="left"><a href="{:U('Member/view',array('member_id'=>$v['member_id']))}" class='red'>{$v.user}({$v.name})</a></td>
+        <td align="left">{$v.tel}</td>
+        <td align="left">{$v.rec_reward|round }</td>
+        <td align="left">{$v.team_reward|round }</td>
+        <td align="left">{$v.fh_reward}次</td>
+        <td align="left">{$v.coach_reward|round }</td>
+        <td align="left"><php> echo $finance->sh_reward($v['user']) </php></td>
+        <td align="left">0</td>
+      </tr>
+      </foreach>
+          </table>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager">{$page}</div>
+    </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 通知栏 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__/js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/myjs.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>通知栏</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+    <h3>
+          <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+          <a href="{:U('News/add')}" class="actionBtn add">添加公告</a>
+          </if>
+        通知栏</h3>
+    <div id="list">
+    <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+      <tr>
+        <th width="30" align="center">序号</th>
+        <th align="left">公告</th>
+        <th width="200" align="center">发布时间</th>
+        <th width="160" align="center">发布者</th>
+        <th width="160" align="center">操作</th>
+      </tr>
+      <foreach name="NewsList" item="v">
+      <tr>
+        <td align="center"><php> echo $sort+$key+1; </php></td>
+        <td><a class='red under' href="{:U('News/view',array('news_id'=>$v['news_id']))}">{$v.title}</a></td>
+        <td align="center">{$v.add_time}</td>
+        <td align="center">{$v.handle_name}</td>
+        <td align="center">
+          <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+          <a href="javascript:void(0)" onclick="web.delNews({$v.news_id})">删除</a> | 
+          <a href="{:U('News/edit',array('news_id'=>$v['news_id']))}">编辑</a> | 
+          </if>
+          <a href="{:U('News/view',array('news_id'=>$v['news_id']))}">查看</a></td>
+      </tr>
+      </foreach>
+
+          </table>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager">{$page}</div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

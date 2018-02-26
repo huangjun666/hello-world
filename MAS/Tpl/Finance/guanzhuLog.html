@@ -1,0 +1,67 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 馆主收益 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/laydate.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+  .actionBtn{ margin: 0 20px 0 0;display: inline;}
+</style>
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>馆主收益</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3>馆主收益</h3>
+        <div id="list">
+    <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+      <tr>       
+        <th width="30" align="center">序号</th>
+        <th align="left">时间</th>
+        <th width="220" align="left">馆主收益总计</th>
+        <th width="220" align="left">状态</th>
+        <th width="220" align="left">备注</th>
+        <th width="150" align="left">操作</th>
+      </tr>
+      <foreach name="log" item="v">
+      <tr>
+        <td align="center"><php> echo $sort+$key+1; </php></td>
+        <td align="left">{$v.start_time|strtotime|date='Y年m月',###}</td>
+        <td align="left">{$v.bonus}</td>
+        <td align="left">
+          <switch name="v.status" >
+            <case value="1">未结算</case>
+            <case value="2">已结算</case>
+            <case value="3">不可结</case>
+            <case value="4">己发放</case>
+            <case value="5">未发放</case>
+          </switch>
+        </td>
+        <td align="left">{$v.remarks}</td>
+        <td align="left"><a href="{:U('Finance/guanzhuLogView',array('start_time'=>strtotime($v['start_time'])))}" class='red'>查看详情</a></td>
+      </tr>
+      </foreach>
+          </table>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager">{$page}</div>
+    </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

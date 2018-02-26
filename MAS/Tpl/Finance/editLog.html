@@ -1,0 +1,111 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 财务中心 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>财务中心</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+    <h3>
+        编辑工资单
+    </h3>
+    <div class="idTabs">
+      <div class="items">
+       <form action="__SELF__" method="post" autocomplete=off >
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+           <th width="131" align='right'>名称</th>
+           <th >内容</th>
+         </tr>
+          
+         <tr>
+          <td align="right">会员账号</td>
+          <td>
+                      <if condition=" isset($_POST[\'user\']) ">{$Think.post.user}<else />{$financeLog.user}</if>
+                      <input type="hidden" name="user" value='<if condition=" isset($_POST[\'user\']) ">{$Think.post.user}<else />{$financeLog.user}</if>'>
+                      <input type="hidden" name="action_type" value='<if condition=" isset($_POST[\'action_type\']) ">{$Think.post.action_type}<else />{$financeLog.action_type}</if>'>
+                      <input type="hidden" name="start_time" value='<if condition=" isset($_POST[\'start_time\']) ">{$Think.post.start_time}<else />{$financeLog.start_time|strtotime|date='Y-m-d',###}</if>'>
+                                </td>
+         </tr>
+
+                  <tr>
+          <td align="right">姓名</td>
+          <td>
+                      <if condition=" isset($_POST[\'name\']) ">{$Think.post.name}<else />{$financeLog.name}</if>
+                      <input type="hidden" name="name" value='<if condition=" isset($_POST[\'name\']) ">{$Think.post.name}<else />{$financeLog.name}</if>' placeholder="输入姓名" size="80" class="inpMain" />
+                                <span class='red'>{$error}</span></td>
+                                </td>
+         </tr>
+                 <tr>
+          <td align="right">结算方式</td>
+          <td>
+                      <if condition=" isset($_POST[\'action_type\']) ">
+                        {$Think.post.action_type}
+                        <switch name="Think.post.action_type" >
+                          <case value="1">周结</case>
+                          <case value="2">月结</case>
+                        </switch>
+                        <else />
+                        <switch name="financeLog.action_type" >
+                          <case value="1">周结</case>
+                          <case value="2">月结</case>
+                        </switch>
+                      </if>
+                                <span class='red'>{$error}</span></td>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">状态</td>
+          <td>
+                      <select name="status">
+                        <option value=1 <if condition="$financeLog['status'] eq 1" > selected="true" </if> >未结算</option>
+                        <option value=2 <if condition="$financeLog['status'] eq 2" > selected="true" </if> >已结算</option>
+                        <option value=3 <if condition="$financeLog['status'] eq 3" > selected="true" </if> >不可结</option>
+                        <option value=4 <if condition="$financeLog['status'] eq 4" > selected="true" </if> >己发放</option>
+                        <option value=5 <if condition="$financeLog['status'] eq 5" > selected="true" </if> >未发放</option>
+                       </select>
+                       <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">备注</td>
+          <td>
+                      <input type="text" name="remarks" value='<if condition=" isset($_POST[\'remarks\']) ">{$Think.post.remarks}<else />{$financeLog.remarks}</if>' placeholder="备注" size="80" class="inpMain w150" />
+                      * 10个字以内
+                       <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                 </table>
+        </div>
+        
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+          <td width="131"></td>
+          <td>
+           <input name="submit" class="btn" type="submit" value="保存" />
+           <input class="btn" type="button" value="返回" onclick='history.back();' />
+          </td>
+         </tr>
+        </table>
+        </form>
+      </div>
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

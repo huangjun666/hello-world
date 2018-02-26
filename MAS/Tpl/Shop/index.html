@@ -1,0 +1,87 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 重销商城 - 首页 </title>
+<link href="__PUBLIC__css/public.css" rel="stylesheet" type="text/css">
+<link href="__PUBLIC__fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/laydate.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__fancybox/jquery.fancybox.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+  .actionBtn{ margin: 0 20px 0 0;display: inline;}
+</style>
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<php> if( $_SESSION['shop_menu']=='Shop' ): </php>
+<include file='Common:shop_menu' />
+<php> elseif($_SESSION['shop_menu']=='Shop_Depot'): </php>
+<include file='Common:shop_depot_menu' />
+<php> endif; </php>
+ <div id="dcMain" class='bg'>
+   <!-- 当前位置 -->
+<div id="urHere">Order 重销商城<b>></b><strong>商品列表</strong> </div>   <div class="mainBox w1200" style="height:auto!important;height:550px;min-height:550px;">
+        <h3 class='m'>
+          <if condition=" $_GET['shop_order_id'] neq 0 " >
+          <a href="{:U('ShopCart/edit',array('shop_order_id'=>I('shop_order_id',0,'intval')))}" class="actionBtn red m20 yuan">返回上一订单</a>
+          </if>
+          所有商品<br>
+        </h3>
+        <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+          <form class="finance_select" id='finance_select' method='post' action='__SELF__'>
+            <div class="member">
+              <span>商品名称：</span>
+              <input type="text" value='{$Think.post.name}' name='name' placeholder='请输入商品名称'>
+            </div>
+            <div class="search" onclick='$("#finance_select").submit();'>查询</div>
+          </form>
+          </if>
+        <div id="list">
+          <!-- 商品图片列表 -->
+          <div class="shop_goods_list">
+            <ul>
+              <foreach name='goodsList' item='v'>
+              <li>
+                <div class="img">
+                  <a href="{:U('Shop/goodsView',array('goods_id'=>$v['goods_id'],'cate_id'=>$v['cate_id'],'shop_order_id'=>I('shop_order_id',0,'intval')))}"><img src="{$v.cover}" width="240" height="186" alt=""></a>
+                </div>
+                <div class="info">
+                  <span class='left'>价格：<em>{$v.price|floatval}{$v.price_unit}</em></span>
+                  <span class='right'><em class='f' id="goodsNum_{$v.goods_id}">{$v.num}</em>{$v.num_unit}</span>
+                  <span class='left'>折扣：<em>{$v.discount}%</em></span>
+                  <span class='right'>颜色：{$v.color}</span>
+                  <span class='left'>尺码：{$v.size}</span>
+                  <span class='right'>
+                    <b class='but cart' onclick="shop.chooseGoodsDialog({$Think.get.shop_order_id},{$v.goods_id},'{$v.name}','{$v.number}','{$v.num_unit}','{$v.price|floatval}','{$v.discount}','{$v.price_unit}','del')">
+                      加入
+                    </b>
+                  </span>
+                  <span class='left'>货号：{$v.number}</span>
+                </div>
+                <div class="title">
+                  <div class="name"><a class='del' href="{:U('Shop/goodsView',array('goods_id'=>$v['goods_id'],'cate_id'=>$v['cate_id'],'shop_order_id'=>I('shop_order_id',0,'intval')))}">{$v.name}</a></div>
+                </div>
+              </li>
+              </foreach>
+            </ul>
+          </div>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager w1085">{$page}</div>
+    </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

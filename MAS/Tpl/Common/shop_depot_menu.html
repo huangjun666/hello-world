@@ -1,0 +1,65 @@
+<SCRIPT src="__PUBLIC__js/shop.js" type="text/javascript"></SCRIPT>
+<script>
+  $(function(){
+
+    //控制左侧货物分类的显示
+    var shopGoodsCateShow=shop.getCookie("shopGoodsCateShow")?parseInt(shop.getCookie("shopGoodsCateShow")):0;
+    // alert(goodsCateShow);
+    if(shopGoodsCateShow){
+      $('#goodsCate').addClass('more').siblings().hide();
+    }
+
+  })
+</script>
+<div id="dcLeft"><div id="menu">
+ <ul class="top">
+ </ul>
+ <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+ <ul>
+  <li <if condition=" MODULE_NAME eq 'ShopDepot' and ACTION_NAME eq 'index'" > class="cur bg" </if> > <a href="{:U('ShopDepot/index')}"><i class="home"></i><em>商城仓库首页</em></a></li>
+ </ul>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+ <ul>
+  <li <if condition=" MODULE_NAME eq 'ShopDepot' and ACTION_NAME eq 'goodsCate'" > class="cur bg" </if> > <a href="{:U('ShopDepot/goodsCate')}"><i class="theme"></i><em>商品分类</em></a></li>
+  <li <if condition=" MODULE_NAME eq 'ShopDepot' and ACTION_NAME eq 'addGoodsCate'" > class="cur bg" </if> > <a href="{:U('ShopDepot/addGoodsCate')}"><i class="edit"></i><em>添加商品分类</em></a></li>
+ </ul>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+ <ul>
+  <li id="goodsCate" onclick="shop.goodsCateShow(this)"> <a href="javascript:void(0)"><i class="download"></i><em>商品管理</em></a></li>
+  <!-- 货物分类列表 -->
+  <shopGoodsCate order='' limit='' >
+  <li <if condition=" MODULE_NAME eq 'ShopDepot' and ACTION_NAME eq 'goodsList' and $_GET['cate_id'] eq $cate_id" > class="cur bg" </if> > <a href="{$url}"><i class="menuPage"></i><em>{$name}</em></a></li>
+  </shopGoodsCate>
+
+ </ul>
+  </if>
+    <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+ <ul>
+  <li <if condition=" MODULE_NAME eq 'ShopDepot' and ACTION_NAME eq 'goodsChangeLog'" > class="cur bg" </if> > <a href="{:U('ShopDepot/goodsChangeLog')}"><i class="data"></i><em>商品出库入库记录</em></a></li>
+  <li <if condition=" MODULE_NAME eq 'ShopDepot' and ACTION_NAME eq 'goodsTransactionLog'" > class="cur bg" </if> > <a href="{:U('ShopDepot/goodsTransactionLog')}"><i class="data"></i><em>商品订货统计</em></a></li>
+  <li <if condition=" MODULE_NAME eq 'ShopDepot' and ACTION_NAME eq 'deliverGoodsLog'" > class="cur bg" </if> > <a href="{:U('ShopDepot/deliverGoodsLog')}"><i class="data"></i><em>商品发货统计</em></a></li>
+ </ul>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(3,4,5)) " >
+ <ul>
+  <li <if condition=" MODULE_NAME eq 'ShopCart' " > class="cur bg" </if> > <a href="{:U('ShopCart/index')}"><i class="cart"></i><em>购物车</em></a></li>
+ </ul>
+  </if>
+  
+ <ul>
+  <if condition=" in_array($_SESSION['role'], array(2,3,4)) " >
+  <li <if condition=" MODULE_NAME eq 'Shop'" > class="cur bg" </if> > <a href="{:U('Shop/index',array('shop_order_id'=>I('shop_order_id',0,'intval')))}"><i class="shop"></i><em>重销商城</em></a></li>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(5)) " >
+  <li <if condition=" MODULE_NAME eq 'Depot'" > class="cur bg" </if> > <a href="{:U('Depot/index')}"><i class="home"></i><em>仓库管理</em></a></li>
+  </if>
+  <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+  <li <if condition=" MODULE_NAME eq 'Finance' " > class="cur bg" </if> > <a href="{:U('Finance/index')}"><i class="backup"></i><em>返回财务中心</em></a></li>
+  </if>
+  
+ </ul>
+  
+
+</div></div>

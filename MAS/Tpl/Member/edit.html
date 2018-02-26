@@ -1,0 +1,229 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 会员中心 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/myjs.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+</head>
+<script>
+  var provinceID='<if condition=" isset($_POST[\'province\']) ">{$Think.post.province}<else />{$member.ProvinceID}</if>';
+  var province='<if condition=" isset($_POST[\'province_name\']) ">{$Think.post.province_name}<else />{$member.province}</if>';
+  var cityID='<if condition=" isset($_POST[\'city\']) ">{$Think.post.city}<else />{$member.CityID}</if>';
+  var city='<if condition=" isset($_POST[\'city_name\']) ">{$Think.post.city_name}<else />{$member.city}</if>';
+  var districtID='<if condition=" isset($_POST[\'district\']) ">{$Think.post.district}<else />{$member.DistrictID}</if>';
+  var district='<if condition=" isset($_POST[\'province_name\']) ">{$Think.post.province_name}<else />{$member.district}</if>';
+
+  $(function(){
+    /*省级名加载*/
+    web.getProvince('#province');
+
+    /*市级加载*/
+    $('#province').change(function(){
+      var provinceID=$(this).val();
+      var selectIndex = document.getElementById("province").selectedIndex;
+        $('#province_name').val(document.getElementById("province").options[selectIndex].text);
+      web.getCity('#city',provinceID);
+      
+    })
+
+    /*区/县级加载*/
+    $('#city').change(function(){
+      var cityID=$(this).val();
+      web.getDistrict('#district',cityID);
+      
+    })
+
+  })
+</script>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>会员中心</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:850px;">
+    <h3>
+      <if condition="ACTION_NAME eq 'edit' "> 
+        会员编辑
+        <elseif condition="ACTION_NAME eq 'add' "/>
+        添加会员
+      </if>
+
+      
+    </h3>
+    <div class="idTabs">
+      <div class="items">
+       <form action="__SELF__" method="post" autocomplete=off >
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+           <th width="131" align='right'>名称</th>
+           <th >内容</th>
+         </tr>
+          
+         <tr>
+          <td align="right">会员账号</td>
+          <td>
+                      <if condition=" isset($_POST[\'user\']) ">{$Think.post.user}<else />{$member.user}</if>
+                      <input type="hidden" name="user" value='<if condition=" isset($_POST[\'member_id\']) ">{$Think.post.user}<else />{$member.user}</if>'>
+                      <input type="hidden" name="member_id" value='<if condition=" isset($_POST[\'member_id\']) ">{$Think.post.member_id}<else />{$member.member_id}</if>'>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">密码</td>
+          <td>
+                      <input type="password" name="password" value='<if condition=" isset($_POST[\'password\']) ">{$Think.post.password}<else />{$member.password|decrypt}</if>' placeholder="输入店铺名称" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">店铺名称</td>
+          <td>
+            <input type="text" name="shop" value='<if condition=" isset($_POST[\'shop\']) ">{$Think.post.shop}<else />{$member.shop}</if>' placeholder="输入店铺名称" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">团队标签</td>
+          <td>
+                      {$member.team_tag}
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">姓名</td>
+          <td>
+                      <input type="text" name="name" value='<if condition=" isset($_POST[\'name\']) ">{$Think.post.name}<else />{$member.name}</if>' placeholder="输入姓名" size="80" class="inpMain" />
+                                <span class='red'>{$error}</span></td>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">性别</td>
+          <td>
+                      <label for="mobile_closed_0">
+           <input type="radio" name="sex" id="mobile_closed_0" value="1" checked="true" >
+           男</label>
+          <label for="mobile_closed_1">
+           <input type="radio" name="sex" id="mobile_closed_1" value="2" <if condition=' ($_POST["sex"] eq 2) or ($member["sex"] eq 2) ' > checked="true"</if>>
+           女</label>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">身份证号</td>
+          <td>
+                      <input type="hidden" name="id_card" value='<if condition=" isset($_POST[\'id_card\']) ">{$Think.post.id_card}<else />{$member.id_card}</if>' placeholder="输入身份证号" size="80" class="inpMain" />
+<if condition=" isset($_POST[\'id_card\']) ">{$Think.post.id_card}<else />{$member.id_card}</if>
+                      <span class='red'>{$error}</span>
+                                </td>
+         </tr>
+
+                  <tr>
+          <td align="right">身份证地址</td>
+          <td>
+                      <select name="province" id='province' value=''>
+                       </select>
+                       <select name="city" id='city'>
+                       </select>
+                       <select name="district" id='district'>
+                      </select><span class='red'>{$error}</span>
+                      <input type="hidden" name="province_name" id="province_name">
+                      <input type="hidden" name="city_name" id="city_name">
+                      <input type="hidden" name="district_name" id="district_name">
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">身份证详细地址</td>
+          <td>
+                      <input type="text" name="adress" value='<if condition=" isset($_POST[\'adress\']) ">{$Think.post.adress}<else />{$member.adress}</if>' placeholder="某某路莫某街408号" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">移动电话</td>
+          <td>
+                      <input type="text" name="tel" value='<if condition=" isset($_POST[\'tel\']) ">{$Think.post.tel}<else />{$member.tel}</if>' placeholder="输入移动电话" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+         <tr>
+          <td align="right">固定电话</td>
+          <td>
+                      <input type="text" name="fixed_tel" value='<if condition=" isset($_POST[\'fixed_tel\']) ">{$Think.post.fixed_tel}<else />{$member.fixed_tel}</if>' placeholder="输入固定电话" size="80" class="inpMain" />
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">开户银行</td>
+          <td>
+                      
+            <input type="text" name="bank_name" value='<if condition=" isset($_POST[\'bank_name\']) ">{$Think.post.bank_name}<else />{$member.bank_name}</if>' placeholder="输入开户行" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">开户名</td>
+          <td>
+                      <input type="text" name="bank_user" value='<if condition=" isset($_POST[\'bank_user\']) ">{$Think.post.bank_user}<else />{$member.bank_user}</if>' placeholder="输入开会名" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">银行账号</td>
+          <td>
+                      <input type="text" name="bank_card" value='<if condition=" isset($_POST[\'bank_card\']) ">{$Think.post.bank_card}<else />{$member.bank_card}</if>' placeholder="输银行账号入" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                 <tr>
+          <td align="right">点位信息</td>
+          <td>
+                      <select name="point">
+                        <option value="0" selected=true >0万</option>
+                        <option value="1" <if condition=' ($_POST["point"] eq 1) or ($member["point"] eq 1) ' > selected="true"</if>>1万</option>
+                        <option value="2" <if condition=' ($_POST["point"] eq 2) or ($member["point"] eq 2) ' > selected="true"</if>>2万</option>
+                        <option value="4" <if condition=' ($_POST["point"] eq 4) or ($member["point"] eq 4) ' > selected="true"</if>>4万</option>
+                        <option value="6" <if condition=' ($_POST["point"] eq 6) or ($member["point"] eq 6) ' > selected="true"</if>>6万</option>
+                       </select><span class='red'>{$error}</span>
+                                 </td>
+         </tr>
+            <tr>
+          <td align="right">推荐人账号</td>
+          <td>
+                      <input type="text" name="recommend_user" value='<if condition=" isset($_POST[\'recommend_user\']) ">{$Think.post.recommend_user}<else />{$member.recommend_user}</if>' placeholder="输入推荐人账号" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">电子邮箱</td>
+          <td>
+                      <input type="text" name="email" value='<if condition=" isset($_POST[\'email\']) ">{$Think.post.email}<else />{$member.email}</if>' placeholder="输入电子邮箱" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                      
+                                 </td>
+         </tr>
+         <tr>
+          <td align="right">所属馆主</td>
+          <td>
+                      <input type="text" name="handle" value='<if condition=" isset($_POST[\'handle\']) ">{$Think.post.handle}<else />{$member.handle}</if>' placeholder="输入馆主会员帐号" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                      
+                                 </td>
+         </tr>
+                  
+
+                 </table>
+        </div>
+        
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+          <td width="131"></td>
+          <td>
+           <input name="submit" class="btn" type="submit" value="保存" />
+           <input class="btn" type="button" value="返回" onclick='history.back();' />
+          </td>
+         </tr>
+        </table>
+        </form>
+      </div>
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

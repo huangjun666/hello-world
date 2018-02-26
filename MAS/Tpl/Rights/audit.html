@@ -1,0 +1,91 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 权限管理审核 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__/js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+</style>
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 权限管理审核<b>></b><strong>审核列表</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:850px;">
+        <h3 class="">审核列表</h3>
+        <div id="list">
+    <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+      <tr>
+        <th width="30" align="center">序号</th>
+        <th align="left">会员帐号与姓名</th>
+        <th width="160" align="center">变更情况</th>
+        <th width="140" align="center">时间</th>
+        
+        <th width="160" align="center">提交人员</th>
+        <th width="160" align="center">审核人员</th>
+        <th width="80" align="center">状态</th>
+        <th width="100" align="center">操作</th>
+      </tr>
+      <foreach name="rights_audit" item="v">
+      <tr>
+        <td align="center"><php> echo $sort+$key+1; </php></td>
+        <td>{$v.user}({$v.name})</td>
+        <td align="center">
+          <switch name="v.role_before" >
+          <case value="1">普通经销商</case>
+          <case value="2"><span style='color:#f00' >生活馆馆主</span></case>
+          <case value="3"><span style='color:#f00' >财务</span></case>
+          <case value="4"><span style='color:#f00' >系统管理员</span></case>
+          <case value="5"><span style='color:#f00' >仓库管理员</span></case>
+          </switch>
+         --> 
+          <switch name="v.role" >
+          <case value="1">普通经销商</case>
+          <case value="2"><span style='color:#f00' >生活馆馆主</span></case>
+          <case value="3"><span style='color:#f00' >财务</span></case>
+          <case value="4"><span style='color:#f00' >系统管理员</span></case>
+          <case value="5"><span style='color:#f00' >仓库管理员</span></case>
+          </switch></td>
+        <td align="center">{$v.add_time}</td>
+        <td align="center">{$v.audit_user}({$v.audit_name})</td>
+        <td align="center">{$v.handle_user}({$v.handle_name})</td>
+        <td align="center">
+          <switch name="v.status" >
+            <case value="1"><span style='color:#666;'>待审核</span></case>
+            <case value="2"><span style='color:#28B779;'>通过</span></case>
+            <case value="3"><span style='color:#f00;'>不通过</span></case>
+          </switch>
+        </td>
+        <td align="center">
+          <if condition=" in_array($v['status'], array(1)) " >
+          <a href="{:U('Rights/pass',array('id'=>$v['id'],'audit'=>1))}">不通过</a>
+           | 
+           <a href="{:U('Rights/pass',array('id'=>$v['id'],'audit'=>2))}">通过</a>
+           <else/>
+           审核完毕
+          </if>
+        </td>
+      </tr>
+      </foreach>
+
+          </table>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager">{$page}</div>               </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

@@ -1,0 +1,159 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 订单管理 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/laydate.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+</style>
+<if condition=" in_array($_SESSION['role'], array(3,4)) " >
+<script>
+
+//导出报表
+function settlement_report(){
+  var unit=$('#unit').val();
+  var time=$('#search_time').val();
+  // location.href='http://www.baidu.com';
+  location.href='/Order/settlement_report/time/'+time+'/unit/'+unit;
+}
+</script>
+</if>
+</head>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>订单管理</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3 class='m'>
+          <if condition=" in_array($_SESSION['role'], array(2,4)) " >
+          <a href="{:U('Order/add')}" class="actionBtn add">添加订单</a>
+          </if>
+        订单列表</h3>
+        <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+          <div class="finance_select" id='finance_select'>
+            <div class="type">
+              <span>单位：</span>
+              <select name="unit" id="unit">
+                <option value=1 >周</option>
+                <option value=2 >月</option>
+              </select>
+            </div>
+            <div class="time">
+              <span>需要导出的时间点：</span>
+              <input type="text" name='time' id='search_time' onclick="laydate()" value='<php>
+                  echo date('Y-m-d',time());
+             </php>'>
+            </div>
+            <div class="search w" onclick='settlement_report()'>导出订单报表</div>
+            <div class="prompt">温馨提示：该功能导出的订单只限于<em>审核通过(二审与三审)</em>的订单</div>
+          </div>
+          </if>
+          <if condition=" in_array($_SESSION['role'], array(2,3,4)) " >
+          <form class="finance_select" id='finance_select_0' method='get' action='__SELF__'>
+            <div class="member">
+              <span>姓名：</span>
+              <input type="text" value='{$Think.get.name}' name='name' placeholder='请输入姓名查询'>
+              <input type="hidden" name='p' value='1'>
+            </div>
+            <div class="search" onclick='$("#finance_select_0").submit();'>查询</div>
+          </form>
+          </if>
+        <div id="list">
+    <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+      <tr>
+        <th width="30" align="center">序号</th>
+        <th align="left">店铺名称</th>
+        <th width="40" align="center">姓名</th>
+        <th align="center">推荐人</th>
+        <if condition=" in_array($_SESSION['role'], array(0)) " >
+        <th align="center">安置人</th>
+        </if>
+        <th width="120" align="center">联系方式</th>
+        <th width="60" align="center">报单金额</th>
+        <th width="120" align="center">报单类型</th>
+       <th width="80" align="center">添加日期</th>
+       <th width="60" align="center">审核状态</th>
+        <th width="60" align="center">操作</th>
+      </tr>
+      <foreach name="order" item="v">
+      <tr>
+        <td align="center"><php> echo $sort+$key+1; </php></td>
+        <td><a class='red under' href="{:U('Order/view',array('order_id'=>$v['order_id']))}">{$v.recommend_shop}</a></td>
+        <td align="center">{$v.name}</td>
+        <td align="center">{$v.recommend_user}({$v.recommend_name})</td>
+        <if condition=" in_array($_SESSION['role'], array(0)) " >
+        <td align="center">{$v.place_user}({$v.place_name})</td>
+        </if>
+        <td align="center">{$v.tel}</td>
+        <td align="center">{$v.money}</td>
+        <td align="center">
+          <switch name="v.type" >
+          <case value="1">普通经销商</case>
+          <case value="2"><span class='red'>生活馆</span></case>
+          </switch>
+          (
+            <switch name="v.orderType" >
+            <case value="1">首单</case>
+            <case value="2"><span class='red'>补单</span></case>
+            <case value="3"><span class='red'>重销</span></case>
+            </switch>
+          )
+        </td>
+        <td align="center">{$v.add_time|strtotime|date='Y-m-d',###}</td>
+        <td align="center">
+            <switch name="v.status" >
+            <case value="1"><span style='color:#666;'>待提交</span></case>
+            <case value="2"><span style='color:#28B779;'>通过</span></case>
+            <case value="3"><span style='color:#f00;'>不通过</span></case>
+            <case value="4"><span style='color:#0065B0;'>待一审</span></case>
+            <case value="5"><span style='color:#0065B0;'>待二审</span></case>
+            <case value="6"><span style='color:#0065B0;'>待三审</span></case>
+            </switch>
+        </td>
+        <td align="center">
+          <php>
+
+          //是否可以编辑
+          $isCan=false;
+
+          // 馆主编辑权限检查
+          if($_SESSION['role']==2 && in_array($v['status'], array(1)) ){
+            $isCan=true;
+          }
+
+          // 财务、超级管理员
+          if(in_array($_SESSION['role'], array(3,4)) &&  in_array($v['status'], array(1,4))){
+            $isCan=true;
+          }
+          //仓库管理，没有权限进入订单中心
+        </php>
+          <if condition="$isCan">
+            <a href="{:U('Order/edit',array('order_id'=>$v['order_id']))}">编辑</a>
+          <else />
+            <a href="{:U('Order/view',array('order_id'=>$v['order_id']))}">查看</a>
+          </if>
+        </td>
+      </tr>
+      </foreach>
+          </table>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager">{$page}</div>               </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

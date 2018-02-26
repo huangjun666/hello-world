@@ -1,0 +1,137 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 生活馆 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/myjs.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/laydate.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+</head>
+<script>
+  var provinceID='<if condition=" isset($_POST[\'province\']) ">{$Think.post.province}<else />{$member.sh_ProvinceID}</if>';
+  var province='<if condition=" isset($_POST[\'province_name\']) ">{$Think.post.province_name}<else />{$member.sh_province}</if>';
+  var cityID='<if condition=" isset($_POST[\'city\']) ">{$Think.post.city}<else />{$member.sh_CityID}</if>';
+  var city='<if condition=" isset($_POST[\'city_name\']) ">{$Think.post.city_name}<else />{$member.sh_city}</if>';
+  var districtID='<if condition=" isset($_POST[\'district\']) ">{$Think.post.district}<else />{$member.sh_DistrictID}</if>';
+  var district='<if condition=" isset($_POST[\'province_name\']) ">{$Think.post.province_name}<else />{$member.sh_district}</if>';
+
+  $(function(){
+    /*省级名加载*/
+    web.getProvince('#province');
+
+    /*市级加载*/
+    $('#province').change(function(){
+      var provinceID=$(this).val();
+      var selectIndex = document.getElementById("province").selectedIndex;
+        $('#province_name').val(document.getElementById("province").options[selectIndex].text);
+      web.getCity('#city',provinceID);
+      
+    })
+
+    /*区/县级加载*/
+    $('#city').change(function(){
+      var cityID=$(this).val();
+      web.getDistrict('#district',cityID);
+      
+    })
+
+  })
+</script>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>生活馆</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+    <h3>
+        编辑会员生活馆信息     
+    </h3>
+    <div class="idTabs">
+      <div class="items">
+       <form action="__SELF__" method="post" autocomplete=off >
+        <div id="main">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+           <th width="131" align='right'>名称</th>
+           <th >内容</th>
+         </tr>
+          
+         <tr>
+          <td align="right">会员账号</td>
+          <td>
+                      <if condition=" isset($_POST[\'user\']) ">{$Think.post.user}<else />{$member.user}</if>
+                      <input type="hidden" name="user" value='<if condition=" isset($_POST[\'member_id\']) ">{$Think.post.user}<else />{$member.user}</if>'>
+                      <input type="hidden" name="member_id" value='<if condition=" isset($_POST[\'member_id\']) ">{$Think.post.member_id}<else />{$member.member_id}</if>'>
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">姓名</td>
+          <td>
+                      <if condition=" isset($_POST[\'name\']) ">{$Think.post.name}<else />{$member.name}</if>
+                      <input type="hidden" name="name" value='<if condition=" isset($_POST[\'name\']) ">{$Think.post.name}<else />{$member.name}</if>' placeholder="输入姓名" size="80" class="inpMain" />
+                                <span class='red'>{$error}</span></td>
+                                </td>
+         </tr>
+                  
+         <tr>
+          <td align="right">经销商预留手机号</td>
+          <td>
+                      <input type="text" name="sh_tel" value='<if condition=" isset($_POST[\'sh_tel\']) ">{$Think.post.sh_tel}<else />{$member.sh_tel}</if>' placeholder="输入移动电话" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>  
+         <tr>
+          <td align="right">所属区域</td>
+          <td>
+                      <select name="province" id='province' value=''>
+                       </select>
+                       <select name="city" id='city'>
+                       </select>
+                       <select name="district" id='district'>
+                      </select><span class='red'>{$error}</span>
+                      <input type="hidden" name="province_name" id="province_name">
+                      <input type="hidden" name="city_name" id="city_name">
+                      <input type="hidden" name="district_name" id="district_name">
+                                </td>
+         </tr>
+                  <tr>
+          <td align="right">所属区域详细地址</td>
+          <td>
+                      <input type="text" name="adress" value='<if condition=" isset($_POST[\'adress\']) ">{$Think.post.adress}<else />{$member.sh_adress}</if>' placeholder="某某路莫某街408号" size="80" class="inpMain" /><span class='red'>{$error}</span>
+                                </td>
+         </tr> 
+
+                  <tr>
+          <td align="right">房租到期时间</td>
+          <td>
+                      <input type="text" name="sh_room_endtime" id='search_time' onclick="laydate()" value='<if condition=" isset($_POST[\'sh_room_endtime\']) ">{$Think.post.sh_room_endtime|strtotime|date='Y-m-d',###}<else />{$member.sh_room_endtime|strtotime|date='Y-m-d',###}</if>' placeholder="某某路莫某街408号" size="80" class="inpMain w80" /><span class='red'>{$error}</span>
+                                </td>
+         </tr>              
+
+                 </table>
+        </div>
+        
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+         <tr>
+          <td width="131"></td>
+          <td>
+           <input name="submit" class="btn" type="submit" value="保存" />
+           <input class="btn" type="button" value="返回" onclick='history.back();' />
+          </td>
+         </tr>
+        </table>
+        </form>
+      </div>
+    </div>
+   </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>

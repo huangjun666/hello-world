@@ -1,0 +1,227 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>order 管理中心 - 财务管理 </title>
+<link href="__PUBLIC__/css/public.css" rel="stylesheet" type="text/css">
+<SCRIPT src="__PUBLIC__js/jquery-1.7.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="__PUBLIC__js/laydate.js" type="text/javascript"></SCRIPT>
+<include file='Common:tongji' />
+<style>
+  table a:hover{ color: red;}
+  .actionBtn{ margin: 0 20px 0 0;display: inline;}
+</style>
+</head>
+<if condition=" in_array($_SESSION['role'], array(3,4)) " >
+<script>
+//一键结算所有
+function settlement_all(){
+
+  // 提醒用户
+  if(!confirm("财务报表【一键结算所有】之后，将不可逆转，\\n确认要【一键结算所有】吗？")){
+    return false;
+  }
+
+  var time=$('#search_time').val();
+  var action_type=$('#action_type').val();
+  // location.href='http://www.baidu.com';
+  location.href='/Finance/settlement_all/time/'+time+'/action_type/'+action_type;
+
+}
+
+//导出报表
+function settlement_report(){
+
+  var time=$('#search_time').val();
+  var action_type=$('#action_type').val();
+  // location.href='http://www.baidu.com';
+  location.href='/Finance/settlement_report/time/'+time+'/action_type/'+action_type;
+}
+
+//已发放
+function pay_off(){
+
+  // 提醒用户
+  if(!confirm("财务报表【已发放】之后，将不可逆转，\\n确认要【已发放】吗？")){
+    return false;
+  }
+
+  var time=$('#search_time').val();
+  var action_type=$('#action_type').val();
+  // location.href='http://www.baidu.com';
+  location.href='/Finance/pay_off/time/'+time+'/action_type/'+action_type;
+}
+
+</script>
+</if>
+<body>
+<div id="dcWrap">
+<include file='Common:head' />
+<!-- dcHead 结束 --> 
+<include file='Common:menu' />
+ <div id="dcMain">
+   <!-- 当前位置 -->
+<div id="urHere">Order 管理中心<b>></b><strong>财务管理</strong> </div>   <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3 class='m'>
+          <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+          <a href="###" class="actionBtn" onclick='settlement_report()'>导出报表</a>
+          <a href="###" class="actionBtn red" onclick='settlement_all()'>一键结算所有</a>
+          <a href="###" class="actionBtn red" onclick='pay_off()'>已发放</a>
+          </if>
+          财务结算记录</h3>
+          
+          <form class="finance_select" id='finance_select' method='get' action='__SELF__'>
+            <if condition=" in_array($_SESSION['role'], array(1,2,3,4)) " >
+            <div class="type">
+              <span>结算方式：</span>
+              <select name="action_type" id="action_type">
+                <option value=1 >周结</option>
+                <option value=2 <if condition=' $_GET["action_type"] eq 2' > selected="true"</if> >月结</option>
+              </select>
+            </div>
+            <div class="time">
+              <span>需要查询的时间点：</span>
+              <input type="text" name='time' id='search_time' onclick="laydate()" value='<php>
+                if( I("time") ){
+                  echo I('time');
+                }else{
+                  echo date('Y-m-d',time());
+                }
+                
+             </php>'>
+            </div>
+            </if>
+            <if condition=" in_array($_SESSION['role'], array(3,4)) " >
+            <div class="member">
+              <span>会员账号：</span>
+              <input type="text" name='user' value='<php>
+                if( I("user") ){
+                  echo I('user');
+                }                
+             </php>' placeholder='请输入会员账号或姓名'>
+             <input type="hidden" name='p' value='1'>
+            </div>
+            </if>
+            <div class="search" onclick='$("#finance_select").submit();'>查询</div>
+          </form>
+          
+        <div id="list">
+    <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+
+      <!-- 周结 -->
+      <if condition=' $action_type eq 1'> 
+        <tr>
+          <th width="30" align="center">序号</th>
+          <th align="center">会员账号</th>
+          <th align="center">开始时间</th>
+          <th align="center">结束时间</th>
+          <th width="80" align="center">分销奖</th>
+          <th width="110" align="center">总金额</th>
+          <th width="110" align="center">点位</th>
+          <th width="110" align="center">税率</th>
+          <th width="110" align="center">最终奖励</th>
+         <th width="45" align="center">状态</th>
+         <th width="45" align="center">操作</th>
+        </tr>
+        <foreach name="finance" item="v">
+        <tr>
+          <td align="center"><php> echo $sort+$key+1; </php></td>
+          <td align="center">{$v.name}({$v.user})</td>
+          <td align="center">{$v.start_time|strtotime|date='Y-m-d',###}</td>
+          <td align="center">{$v.end_time|strtotime|date='Y-m-d',###}</td>
+          <td align="center">{$v.rec_reward}</td>
+          <td align="center">{$v.total_reward}</td>
+          <td align="center">{$v.point}万</td>
+          <td align="center">{$reward_config.tax_rate}%</td>
+          <td align="center">
+          <php>
+            //进行点位限制、扣税处理
+            $tmpMoney=SERVICE('Finance')->pointToMoney($v['total_reward'],$v['point'],$reward_config);
+            $tmpMoney=SERVICE('Finance')->tax($tmpMoney,$reward_config);
+            echo $tmpMoney;
+          </php>
+          </td>
+          <td align="center">
+            <switch name="v.status" >
+              <case value="1">未结算</case>
+              <case value="2">已结算</case>
+              <case value="3">不可结</case>
+              <case value="4">己发放</case>
+              <case value="5">未发放</case>
+            </switch>
+          </td>
+          <td align="center"><a href="{:U('Finance/editLog',array('user'=>$v['user'],'action_type'=>$action_type,'start_time'=>date('Y-m-d',strtotime($v['start_time']))))}">编辑</a></td>
+        </tr>
+        </foreach>
+      </if>
+
+      <!-- 月结 -->
+      <if condition=' $action_type eq 2'> 
+        <tr>
+          <th width="30" align="center">序号</th>
+          <th align="center">会员账号</th>
+          <th align="center" width="80">开始时间</th>
+          <th align="center" width="80">结束时间</th>
+          <th width="70" align="center">辅导奖</th>
+          <th width="70" align="center">业绩奖</th>
+          <th width="70" align="center">馆主收益</th>
+          <th width="70" align="center">分红奖</th>
+          <th width="90" align="center">总金额</th>
+          <th width="50" align="center">点位</th>
+          <th width="50" align="center">税率</th>
+          <th width="90" align="center">最终奖励</th>
+         <th width="45" align="center">状态</th>
+         <th width="90" align="center">备注</th>
+         <th width="45" align="center">操作</th>
+        </tr>
+        <foreach name="finance" item="v">
+        <tr>
+          <td align="center"><php> echo $sort+$key+1; </php></td>
+          <td align="center">{$v.name}({$v.user})</td>
+          <td align="center">{$v.start_time|strtotime|date='Y-m-d',###}</td>
+          <td align="center">{$v.end_time|strtotime|date='Y-m-d',###}</td>
+          <td align="center">{$v.coach_reward}</td>
+          <td align="center">{$v.team_reward}</td>
+          <td align="center">{$v.sh_reward}</td>
+          <td align="center">{$v.fh_reward}</td>
+          <td align="center">{$v.total_reward}</td>
+          <td align="center">{$v.point}万</td>
+          <td align="center">{$reward_config.tax_rate}%</td>
+          <td align="center">
+          <php>
+            //进行点位限制、扣税处理
+            $tmpMoney=SERVICE('Finance')->pointToMoney($v['total_reward'],$v['point'],$reward_config);
+            $tmpMoney=SERVICE('Finance')->tax($tmpMoney,$reward_config);
+            echo $tmpMoney;
+          </php>
+          </td>
+          <td align="center">
+            <switch name="v.status" >
+              <case value="1">未结算</case>
+              <case value="2">已结算</case>
+              <case value="3">不可结</case>
+              <case value="4">己发放</case>
+              <case value="5">未发放</case>
+            </switch>
+          </td>
+          <td align="center">{$v.remarks}</td>
+          <td align="center"><a href="{:U('Finance/editLog',array('user'=>$v['user'],'action_type'=>$action_type,'start_time'=>date('Y-m-d',strtotime($v['start_time']))))}">编辑</a></td>
+        </tr>
+        </foreach>
+      </if>
+          </table>
+    <div class="action">
+     
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="pager">{$page}</div>
+    </div>
+ </div>
+ <div class="clear"></div>
+<include file='Common:footer' />
+<!-- dcFooter 结束 -->
+<div class="clear"></div> </div>
+</body>
+</html>
